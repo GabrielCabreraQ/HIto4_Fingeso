@@ -3,7 +3,6 @@ package com.easywheels.Model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -14,22 +13,20 @@ public class Arrendatario extends Usuario{
     @ElementCollection
     private List<String> tipoLicencia;
     @ElementCollection
-    private List<String> documentos;
-    // Posible atributo para almacenar los arriendos de cada arrendatario
-    //@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    //private List<Arriendo> arriendos;
+    @CollectionTable(name = "arrendatario_documentos", joinColumns = @JoinColumn(name = "arrendatario_id_usuario"))
+    private List<Documento> documentos;
 
 
     public Arrendatario() {
     }
 
-    public Arrendatario(String rutUsuario, String nombreUsuario, String correoUsuario, String contraseniaUsuario, String telefonoUsuario, LocalDate fechaNacimiento, List<String> tipoLicencia, List<String> documentos) {
+    public Arrendatario(String rutUsuario, String nombreUsuario, String correoUsuario, String contraseniaUsuario, String telefonoUsuario, LocalDate fechaNacimiento, List<String> tipoLicencia, List<Documento> documentos) {
         super(rutUsuario, nombreUsuario, correoUsuario, contraseniaUsuario, telefonoUsuario, fechaNacimiento);
         this.tipoLicencia = tipoLicencia;
         this.documentos = documentos;
     }
 
-    public Arrendatario(List<String> tipoLicencia, List<String> documentos) {
+    public Arrendatario(List<String> tipoLicencia, List<Documento> documentos) {
         this.tipoLicencia = tipoLicencia;
         this.documentos = documentos;
     }
@@ -42,11 +39,11 @@ public class Arrendatario extends Usuario{
         this.tipoLicencia = tipoLicencia;
     }
 
-    public List<String> getDocumentos() {
+    public List<Documento> getDocumentos() {
         return documentos;
     }
 
-    public void setDocumentos(List<String> documentos) {
+    public void setDocumentos(List<Documento> documentos) {
         this.documentos = documentos;
     }
 }

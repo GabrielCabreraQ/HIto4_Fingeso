@@ -1,10 +1,9 @@
 package com.easywheels.Service;
 
-import com.easywheels.Model.Administrador;
-import com.easywheels.Model.Publicacion;
-import com.easywheels.Model.Vehiculo;
+import com.easywheels.Model.*;
 
 import com.easywheels.Repository.AdministradorRepository;
+import com.easywheels.Repository.ArrendatarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +21,8 @@ public class AdministradorService {
     @Autowired
     private PublicacionService publicacionService; //variable para crear un vehiculo
 
+    @Autowired
+    private ArrendatarioRepository arrendatarioRepository; //variable para crear un vehiculo
 
     //Crea un administador
     public Administrador crearAdministrador(Administrador administrador) {
@@ -85,4 +86,22 @@ public class AdministradorService {
         return publicacionService.updatePublicacion(publicacion, permiso);
     }
 
+    public boolean actualizarValidacionDocumento(Long arrendatarioId, boolean validacion) {
+        Optional<Arrendatario> optionalArrendatario = arrendatarioRepository.findById(arrendatarioId);
+
+        if (optionalArrendatario.isPresent()) {
+            Arrendatario arrendatario = optionalArrendatario.get();
+
+            // Actualizar la validación de todos los documentos
+            for (Documento documento : arrendatario.getDocumentos()) {
+                documento.setValidacion(validacion);
+            }
+
+            // Guardamos el arrendatario con todos los documentos actualizados
+            arrendatarioRepository.save(arrendatario);
+            return true;
+        }
+
+        return false; // Si no se encuentra el arrendatario
+    }
 }

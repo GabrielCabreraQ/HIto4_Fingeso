@@ -6,6 +6,7 @@ import com.easywheels.Model.Vehiculo;
 
 import com.easywheels.Service.AdministradorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -99,5 +100,14 @@ public class AdministradorController {
         return updatedPublicacion != null ? ResponseEntity.ok(updatedPublicacion) : ResponseEntity.notFound().build();
     }
 
+    @PutMapping("/{id}/documentos/validacion")
+    public ResponseEntity<String> actualizarValidacionDocumento(@PathVariable Long id, @RequestParam boolean validacion) {
+        boolean exito = administradorService.actualizarValidacionDocumento(id, validacion);
 
+        if (exito) {
+            return new ResponseEntity<>("Estado de validación actualizado correctamente.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("No se pudo actualizar el estado de validación. Verifique el ID del arrendatario.", HttpStatus.NOT_FOUND);
+        }
+    }
 }

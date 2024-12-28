@@ -35,7 +35,7 @@ public class ArrendatarioService {
     private VehiculoRepository vehiculoRepository;
 
     // Registrar usuario
-    public Arrendatario register(String rut, String nombre, String correo, String contrasenia, String telefono, LocalDate fechaNacimiento, List<String> tipoLicencia, List<String> documentos) {
+    public Arrendatario register(String rut, String nombre, String correo, String contrasenia, String telefono, LocalDate fechaNacimiento, List<String> tipoLicencia, List<Documento> documentos) {
         Arrendatario nuevoUsuario = new Arrendatario(rut, nombre, correo, contrasenia, telefono, fechaNacimiento, tipoLicencia, documentos);
         Arrendatario existente = arrendatarioRepository.findByCorreoUsuario(nuevoUsuario.getCorreoUsuario());
         if (existente != null) {
