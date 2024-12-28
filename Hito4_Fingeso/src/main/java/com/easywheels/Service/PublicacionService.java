@@ -52,7 +52,12 @@ public class PublicacionService {
 
     // Método para obtener todas las publicaciones con visibilidad en true
     public List<Publicacion> obtenerPublicacionesVisibles() {
-        return publicacionRepository.findByVisibilidadTrue();
+        // Filtra las publicaciones directamente en la base de datos si es posible
+        return publicacionRepository.findAll().stream()
+                .filter(publicacion -> Boolean.TRUE.equals(publicacion.getVisibilidad()) &&
+                        publicacion.getVehiculo() != null &&
+                        Boolean.TRUE.equals(publicacion.getVehiculo().getDisponible_uso()))
+                .collect(Collectors.toList());
     }
 
     //Actualizar datos de una publicación
@@ -96,12 +101,12 @@ public class PublicacionService {
         return false;
     }
 
-    //Metodo para visualizar un vehículo asociado a una publicación
+    //Metodo para visualizar un vehículo asociado a una publicación (MUESTRA VEHICULOS A ARRENDATARIO)
     public String visualizarVehiculo(Publicacion publicacion) {
-        if (publicacion == null || publicacion.getVehiculo() == null) {
+        if (publicacion == null || publicacion.getVehiculo() == null || publicacion.getVehiculo().getDisponible_uso() == false) {
             return "No hay información del vehículo para esta publicación.";
         }
-        if (!publicacion.getVisibilidad()) {
+        if (!publicacion.getVisibilidad() || !publicacion.getVehiculo().getDisponible_uso()) {
             return "La Publicación no está disponible.";
         }
 
@@ -112,7 +117,6 @@ public class PublicacionService {
                 ", Categoría: " + vehiculo.getCategoria() +
                 ", Tipo de Cuerpo: " + vehiculo.getTipoCuerpo() +
                 ", Combustible/AC: " + vehiculo.getCombustibleAC() +
-                //", Disponibilidad: " + (vehiculo.getDisponibilidad() != null ? vehiculo.getDisponibilidad() : "No especificada") +
                 ", Precio: " + publicacion.getPrecioNormal();
     }
 

@@ -9,6 +9,8 @@ import com.easywheels.Repository.BoletaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -61,62 +63,78 @@ public class ArrendatarioService {
         return true;
     }
 
-    public Arriendo arrendarVehiculo(long idArrendatario, long idPublicacion, LocalDate fechaInicio, LocalDate fechaFinal) {
-        Arrendatario arrendatario = arrendatarioRepository.findById(idArrendatario)
-                .orElseThrow(() -> new IllegalArgumentException("Arrendatario no encontrado."));
-
-        Publicacion publicacion = publicacionRepository.findById(idPublicacion)
-                .orElseThrow(() -> new IllegalArgumentException("Publicación no encontrada."));
-
-        Vehiculo vehiculo = publicacion.getVehiculo();
-
-        // Validar fechas
-        if (fechaInicio.isAfter(fechaFinal)) {
-            throw new IllegalArgumentException("La fecha de inicio debe ser anterior a la fecha final.");
-        }
-
-        // Verificar disponibilidad del vehículo
-        if (!verificarDisponibilidad(vehiculo, fechaInicio, fechaFinal)) {
-            throw new IllegalStateException("El vehículo no está disponible en las fechas seleccionadas.");
-        }
-
-        // Calcular el precio total (por número de días)
-        long dias = fechaFinal.toEpochDay() - fechaInicio.toEpochDay();
-        int precioTotal = (int) (dias * publicacion.getPrecioNormal());
-
-        // Crear el arriendo (sin configurar el ID)
-        Arriendo arriendo = new Arriendo();
-        arriendo.setCancelado(true);
-        arriendo.setConformidad(false);
-        arriendo.setPrecio(precioTotal);
-        arriendo.setFechaInicio(fechaInicio);
-        arriendo.setFechaFin(fechaFinal);
-        arriendo.setArrendatario(arrendatario);
-        arriendo.setVehiculo(vehiculo);
-
+    public ResponseEntity<?> arrendarVehiculo(long idArrendatario, long idPublicacion, LocalDate fechaInicio, LocalDate fechaFinal) {
         try {
-            // Guardar el arriendo en la base de datos
+            // Lógica existente para validar arrendatario y publicación
+            Arrendatario arrendatario = arrendatarioRepository.findById(idArrendatario)
+                    .orElseThrow(() -> new IllegalArgumentException("Arrendatario no encontrado."));
+
+            Publicacion publicacion = publicacionRepository.findById(idPublicacion)
+                    .orElseThrow(() -> new IllegalArgumentException("Publicación no encontrada."));
+
+            Vehiculo vehiculo = publicacion.getVehiculo();
+
+            // Obtener la fecha actual y las fechas límite
+            LocalDate today = LocalDate.now();
+            LocalDate mañana = today.plusDays(1);
+
+            // Validar fechas de inicio y fin
+            if (fechaInicio.isBefore(mañana)) {
+                return ResponseEntity.badRequest().body("Debes realizar el arriendo con un día de anticipación.");
+            }
+            if (fechaFinal.isBefore(fechaInicio)) {
+                return ResponseEntity.badRequest().body("La fecha de inicio debe ser anterior a la fecha final del arriendo.");
+            }
+
+            // Validar el rango de días de arrendamiento
+            long dias = fechaFinal.toEpochDay() - fechaInicio.toEpochDay();
+            if (dias > 30) {
+                return ResponseEntity.badRequest().body("El arriendo no puede superar los 30 días.");
+            }
+
+            // Verificar disponibilidad del vehículo
+            if (!verificarDisponibilidad(vehiculo, fechaInicio, fechaFinal)) {
+                return ResponseEntity.badRequest().body("El vehículo no está disponible en las fechas seleccionadas.");
+            }
+
+            // Calcular el precio total y guardar el arriendo
+            int precioTotal = (int) (dias * publicacion.getPrecioNormal());
+            if(dias == 0){
+                precioTotal = publicacion.getPrecioNormal();
+            }
+            Arriendo arriendo = new Arriendo();
+            arriendo.setCancelado(true);
+            arriendo.setConformidad(false);
+            arriendo.setPrecio(precioTotal);
+            arriendo.setFechaInicio(fechaInicio);
+            arriendo.setFechaFin(fechaFinal);
+            arriendo.setArrendatario(arrendatario);
+            arriendo.setVehiculo(vehiculo);
+
             arriendoRepository.save(arriendo);
+
+            // Crear la boleta
+            Boleta nuevaBoleta = new Boleta();
+            nuevaBoleta.setEstado("Pagado");
+            nuevaBoleta.setFechaPago(LocalDateTime.now().withNano(0));
+            nuevaBoleta.setMontoTotal(precioTotal);
+            arriendo.setBoleta(nuevaBoleta);
+            boletaRepository.save(nuevaBoleta);
+
+            // Cambiar el estado del vehículo
+            vehiculo.setDevuelto(false);
+            vehiculoRepository.save(vehiculo);
+
+            return ResponseEntity.ok(arriendo); // Respuesta exitosa con el arriendo
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage()); // Devuelve el mensaje de error específico
         } catch (DataIntegrityViolationException e) {
-            throw new IllegalStateException("Error al crear el arriendo: probablemente un ID duplicado.", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el arriendo: probablemente un ID duplicado.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el arriendo: " + e.getMessage());
         }
-
-        // Crear la boleta asociada al arriendo y marcarla como pagada
-        Boleta nuevaBoleta = new Boleta();
-        nuevaBoleta.setEstado("Pagado");  // Marcar la boleta como pagada
-        nuevaBoleta.setFechaPago(LocalDateTime.now().withNano(0));  // Establecer la hora exacta de pago
-        nuevaBoleta.setMontoTotal(precioTotal);
-
-        arriendo.setBoleta(nuevaBoleta);
-
-        // Guardar la boleta y el arriendo con su boleta asociada
-        boletaRepository.save(nuevaBoleta);
-        arriendoRepository.save(arriendo);
-
-        // Cambiar el estado del vehículo a "no devuelto"
-        vehiculo.setDevuelto(false);
-        vehiculoRepository.save(vehiculo);
-
-        return arriendo;
     }
+
+
 }

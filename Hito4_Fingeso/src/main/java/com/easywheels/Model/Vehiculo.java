@@ -23,6 +23,7 @@ public class Vehiculo {
     private String categoria;
     private String tipoCuerpo;
     private String combustibleAC;
+    private boolean eliminado;
 
     @ElementCollection
     private List<LocalDate> disponibilidad; // List<LocalDate>
@@ -51,6 +52,7 @@ public class Vehiculo {
         this.disponibilidad = disponibilidad;
         this.devuelto = devuelto;
         this.disponible_uso = disponible_uso;
+        this.eliminado = false;
 
     }
 
@@ -156,4 +158,11 @@ public class Vehiculo {
                 .orElse(null); // Retorna null si no hay informes
     }
 
+    public boolean isEliminado() {
+        return eliminado;
+    }
+
+    public void setEliminado(boolean eliminado) {
+        this.eliminado = eliminado;
+    }
 }

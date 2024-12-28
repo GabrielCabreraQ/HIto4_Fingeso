@@ -39,41 +39,43 @@ async function arrendar(id) {
 
 
 async function pagar() {
-  // Verificar si los valores son correctos
-  const userId = localStorage.getItem("userId");
-  console.log("Fecha de inicio:", fechaInicio.value);
-  console.log("Fecha de fin:", fechaFin.value);
-  console.log("ID de publicación:", idPublicacion.value);
-  
-  if (!userId) {
-    alert("No se encontró el ID del usuario. Por favor, inicia sesión nuevamente.");
-    return;
-  }
-  if (!fechaInicio.value || !fechaFin.value ) {
-    alert("Por favor, ingrese todas las fechas y seleccione una publicación.");
-    return;
-  }
-
-  // Crear el objeto con los datos para el arriendo
-  const arriendoData = {
-    idPublicacion: idPublicacion.value, // Usar el ID de la publicación seleccionada
-    fechaInicio: fechaInicio.value, // Usar la fecha de inicio del formulario
-    fechaFinal: fechaFin.value, // Usar la fecha de fin del formulario
-  };
-
-  try {
-    const response = await axios.post(`http://localhost:8080/arrendatarios/${userId}/arrendar`, arriendoData);
+    // Verificar si los valores son correctos
+    const userId = localStorage.getItem("userId");
+    console.log("Fecha de inicio:", fechaInicio.value);
+    console.log("Fecha de fin:", fechaFin.value);
+    console.log("ID de publicación:", idPublicacion.value);
     
-    if (response.status === 200) {
-      arrendamientoExitoso.value = true;
-      alert("Arriendo realizado con éxito!");
+    if (!userId) {
+        alert("No se encontró el ID del usuario. Por favor, inicia sesión nuevamente.");
+        return;
     }
-  } catch (error) {
-    console.error("Error al realizar el arriendo:", error);
-    alert("Hubo un problema al realizar el arriendo. Posiblemente el vehiculo ya este arrendado en esa fecha.");
-  } finally {
-    showForm.value = false; // Ocultar el formulario después de intentar el pago
-  }
+    if (!fechaInicio.value || !fechaFin.value) {
+        alert("Por favor, ingrese todas las fechas y seleccione una publicación.");
+        return;
+    }
+
+    // Crear el objeto con los datos para el arriendo
+    const arriendoData = {
+        idPublicacion: idPublicacion.value,
+        fechaInicio: fechaInicio.value,
+        fechaFinal: fechaFin.value,
+    };
+
+    try {
+        const response = await axios.post(`http://localhost:8080/arrendatarios/${userId}/arrendar`, arriendoData);
+        
+        if (response.status === 200) {
+            arrendamientoExitoso.value = true;
+            alert("Arriendo realizado con éxito!");
+        }
+    } catch (error) {
+        // Captura el mensaje de error desde la respuesta del backend
+        const errorMessage = error.response?.data;
+        console.error("Error al realizar el arriendo:", error);
+        alert(errorMessage); // Muestra el mensaje de error específico
+    } finally {
+        showForm.value = false; // Ocultar el formulario después de intentar el pago
+    }
 }
 
 

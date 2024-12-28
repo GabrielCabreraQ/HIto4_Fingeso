@@ -44,7 +44,7 @@ public class ArrendatarioController {
 
     // Arrendar un vehículo
     @PostMapping("/{idArrendatario}/arrendar")
-    public ResponseEntity<Arriendo> arrendarVehiculo(
+    public ResponseEntity<?> arrendarVehiculo(
             @PathVariable long idArrendatario,
             @RequestBody Map<String, Object> body) {
 
@@ -53,23 +53,23 @@ public class ArrendatarioController {
             String fechaInicioStr = (String) body.get("fechaInicio");
             String fechaFinalStr = (String) body.get("fechaFinal");
 
-            LocalDate fechaInicio = LocalDate.parse(fechaInicioStr);
-            LocalDate fechaFinal = LocalDate.parse(fechaFinalStr);
-
-            if (fechaInicio == null || fechaFinal == null) {
-                return ResponseEntity.badRequest().body(null);
+            // Validar que las fechas no sean nulas
+            if (fechaInicioStr == null || fechaFinalStr == null) {
+                return ResponseEntity.badRequest().body("Las fechas de inicio y fin son obligatorias.");
             }
 
+            LocalDate fechaInicio = LocalDate.parse(fechaInicioStr);
+            LocalDate fechaFinal = LocalDate.parse(fechaFinalStr);
             long idPublicacion = ((Number) body.get("idPublicacion")).longValue();
-            Arriendo arriendo = arrendatarioService.arrendarVehiculo(idArrendatario, idPublicacion, fechaInicio, fechaFinal);
-            return ResponseEntity.ok(arriendo);
+
+            // Llamar al servicio para arrendar el vehículo
+            ResponseEntity<?> response = arrendatarioService.arrendarVehiculo(idArrendatario, idPublicacion, fechaInicio, fechaFinal);
+            return response;
 
         } catch (DateTimeParseException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            return ResponseEntity.badRequest().body("Formato de fecha no válido. Asegúrate de usar el formato correcto.");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado: " + e.getMessage());
         }
     }
 }

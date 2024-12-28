@@ -12,6 +12,8 @@ import java.util.List;
 
 @Repository
 public interface VehiculoRepository extends JpaRepository<Vehiculo, Long> {
-    @Query("SELECT v FROM Vehiculo v WHERE :fecha MEMBER OF v.disponibilidad AND v.devuelto = false")
+    @Query("SELECT v FROM Vehiculo v WHERE :fecha MEMBER OF v.disponibilidad AND v.devuelto = false AND v.eliminado = true")
     List<Vehiculo> findVehiculosDisponibles(@Param("fecha") LocalDate fecha);
+
+    List<Vehiculo> findByEliminadoFalse();
 }

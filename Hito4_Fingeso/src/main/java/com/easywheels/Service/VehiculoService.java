@@ -47,10 +47,10 @@ public class VehiculoService {
                 .orElseThrow(() -> new IllegalArgumentException("Vehículo con ID " + id + " no encontrado."));
     }
 
-    //Obtener todos los vehiculos, solo puede hacerlo el admin.
+    //Obtener todos los vehiculos NO eliminados
     public List<Vehiculo> getAllVehiculos(String permiso) {
         verificarPermisosAdmin(permiso);
-        return vehiculoRepository.findAll();
+        return vehiculoRepository.findByEliminadoFalse();
     }
 
     //Actualizar información de un vehiculo
@@ -64,14 +64,18 @@ public class VehiculoService {
     }
 
 
-    //Eliminar un vehiculo de la base de datos
+    //Eliminar un vehiculo de la base de datos (cambiar atributo eliminado de false a true)
     public void deleteVehiculo(Long id, String permiso) {
         verificarPermisosAdmin(permiso);
-        if (!vehiculoRepository.existsById(id)) {
-            throw new IllegalArgumentException("Vehículo con ID " + id + " no existe.");
-        }
-        vehiculoRepository.deleteById(id);
+        // Verificar si el vehículo existe
+        Vehiculo vehiculo = vehiculoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Vehículo con ID " + id + " no existe."));
+
+        // Actualizar el atributo eliminado a true
+        vehiculo.setEliminado(true);
+        vehiculoRepository.save(vehiculo);
     }
+
 
     //Método que devuelve los vehículos disponibles en una fecha específica
     public List<Vehiculo> obtenerVehiculosDisponibles(LocalDate fecha, String permiso) {
