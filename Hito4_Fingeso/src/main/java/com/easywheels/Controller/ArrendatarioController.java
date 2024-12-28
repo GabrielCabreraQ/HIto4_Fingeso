@@ -26,6 +26,7 @@ public class ArrendatarioController {
     public ResponseEntity<Arrendatario> register(@RequestBody Arrendatario nuevo) {
         try {
             Arrendatario registrado = arrendatarioService.register(
+                    nuevo.getRutUsuario(),
                     nuevo.getNombreUsuario(),
                     nuevo.getCorreoUsuario(),
                     nuevo.getContraseniaUsuario(),

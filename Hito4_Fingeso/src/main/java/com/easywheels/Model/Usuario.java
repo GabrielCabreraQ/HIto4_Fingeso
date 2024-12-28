@@ -21,6 +21,7 @@ public abstract class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idUsuario;
+    private String rutUsuario;
     private String nombreUsuario;
     private String correoUsuario;
     private String contraseniaUsuario;
@@ -34,7 +35,8 @@ public abstract class Usuario {
     }
 
     // Constructor sin el ID
-    public Usuario(String nombreUsuario, String correoUsuario, String contraseniaUsuario, String telefonoUsuario, LocalDate fechaNacimiento, List<Notificacion> notificaciones) {
+    public Usuario(String rutUsuario, String nombreUsuario, String correoUsuario, String contraseniaUsuario, String telefonoUsuario, LocalDate fechaNacimiento, List<Notificacion> notificaciones) {
+        this.rutUsuario = rutUsuario;
         this.nombreUsuario = nombreUsuario;
         this.correoUsuario = correoUsuario;
         this.contraseniaUsuario = contraseniaUsuario;
@@ -44,7 +46,8 @@ public abstract class Usuario {
     }
 
     //constructor para el registro
-    public Usuario(String nombreUsuario, String correoUsuario, String contraseniaUsuario, String telefonoUsuario, LocalDate fechaNacimiento) {
+    public Usuario(String rutUsuario, String nombreUsuario, String correoUsuario, String contraseniaUsuario, String telefonoUsuario, LocalDate fechaNacimiento) {
+        this.rutUsuario = rutUsuario;
         this.nombreUsuario = nombreUsuario;
         this.correoUsuario = correoUsuario;
         this.contraseniaUsuario = contraseniaUsuario;
@@ -58,6 +61,14 @@ public abstract class Usuario {
 
     public void setIdUsuario(long idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public String getRutUsuario() {
+        return rutUsuario;
+    }
+
+    public void setRutUsuario(String rutUsuario) {
+        this.rutUsuario = rutUsuario;
     }
 
     public String getNombreUsuario() {

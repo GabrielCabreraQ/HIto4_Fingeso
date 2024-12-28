@@ -23,8 +23,8 @@ public class Arrendatario extends Usuario{
     public Arrendatario() {
     }
 
-    public Arrendatario(String nombreUsuario, String correoUsuario, String contraseniaUsuario, String telefonoUsuario, LocalDate fechaNacimiento, List<String> tipoLicencia, List<String> documentos) {
-        super(nombreUsuario, correoUsuario, contraseniaUsuario, telefonoUsuario, fechaNacimiento);
+    public Arrendatario(String rutUsuario, String nombreUsuario, String correoUsuario, String contraseniaUsuario, String telefonoUsuario, LocalDate fechaNacimiento, List<String> tipoLicencia, List<String> documentos) {
+        super(rutUsuario, nombreUsuario, correoUsuario, contraseniaUsuario, telefonoUsuario, fechaNacimiento);
         this.tipoLicencia = tipoLicencia;
         this.documentos = documentos;
     }

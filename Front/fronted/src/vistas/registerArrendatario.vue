@@ -17,6 +17,16 @@
         <div class="form-scrollable">
           <form class="form-container" @submit.prevent="crearPublicacion">
             <div>
+              <label>Rut:</label>
+              <input
+                type="textRut"
+                v-model="newPublication.rutUsuario"
+                class="input-field"
+                placeholder="Ingrese su Rut sin puntos ni guion"
+                required
+              />
+            </div>
+            <div>
               <label>Nombre:</label>
               <input
                 type="text"

@@ -15,9 +15,9 @@ public class Administrador extends Usuario {
     private String departamento;
 
     // Constructor sin ID
-    public Administrador(String nombreUsuario, String correoUsuario, String contraseniaUsuario, String telefonoUsuario,
+    public Administrador(String rutUsuario, String nombreUsuario, String correoUsuario, String contraseniaUsuario, String telefonoUsuario,
                          LocalDate fechaNacimiento, List<Notificacion> notificaciones, String departamento) {
-        super(nombreUsuario, correoUsuario, contraseniaUsuario, telefonoUsuario, fechaNacimiento, notificaciones);
+        super(rutUsuario, nombreUsuario, correoUsuario, contraseniaUsuario, telefonoUsuario, fechaNacimiento, notificaciones);
         this.departamento = departamento;
     }
 
