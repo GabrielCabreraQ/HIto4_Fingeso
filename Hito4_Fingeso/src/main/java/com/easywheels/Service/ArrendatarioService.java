@@ -14,7 +14,10 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ArrendatarioService {
@@ -136,5 +139,25 @@ public class ArrendatarioService {
         }
     }
 
+    public List<Map<String, Object>> obtenerVehiculosArrendados(long idArrendatario) {
+        // Verificar si el arrendatario existe
+        Arrendatario arrendatario = arrendatarioRepository.findById(idArrendatario)
+                .orElseThrow(() -> new IllegalArgumentException("Arrendatario no encontrado."));
 
+        // Obtener todos los arriendos del arrendatario
+        List<Arriendo> arriendos = arriendoRepository.findByArrendatarioId((int) idArrendatario);
+
+        // Mapear los arriendos a una lista de mapas con los detalles
+        return arriendos.stream()
+                .map(arriendo -> {
+                    Map<String, Object> arriendoDetails = new HashMap<>();
+                    arriendoDetails.put("idArriendo", arriendo.getId());
+                    arriendoDetails.put("vehiculo", arriendo.getVehiculo());
+                    arriendoDetails.put("fechaInicio", arriendo.getFechaInicio());
+                    arriendoDetails.put("fechaFin", arriendo.getFechaFin());
+                    arriendoDetails.put("precio", arriendo.getPrecio());
+                    return arriendoDetails;
+                })
+                .collect(Collectors.toList());
+    }
 }
