@@ -4,14 +4,17 @@ import axios from 'axios';
 
 // Datos reactivos
 const publicaciones = ref([]);
+const vehiculosArrendados = ref([]);
 const notifications = ref([]);
 const selectedSection = ref('Vizualizar Publicaciones');
-const menuItems = ref(['Vizualizar Publicaciones', 'Notificaciones', 'Cerrar Sesión']);
+const menuItems = ref(['Vizualizar Publicaciones', 'Vehículos Arrendados', 'Notificaciones', 'Cerrar Sesión']);
 const showForm = ref(false);
+
 
 const fechaInicio = ref('');
 const fechaFin = ref('');
 const idPublicacion = ref(null); // ID de la publicación seleccionada
+const idArriendo = ref(null);
 const arrendamientoExitoso = ref(false); // Flag para saber si el arriendo fue exitoso
 
 // Método para cambiar de sección
@@ -29,14 +32,23 @@ async function cargarPublicaciones() {
   }
 }
 
+// Método para cargar vehículos arrendados del backend
+async function cargarVehiculosArrendados() {
+  const userId = localStorage.getItem("userId");
+  try {
+    const response = await axios.get(`http://localhost:8080/arrendatarios/${userId}/vehiculos`);
+    vehiculosArrendados.value = response.data;
+  } catch (error) {
+    console.error('Error al cargar los vehículos arrendados:', error);
+  }
+}
+
 // Método para arrendar el vehículo
 async function arrendar(id) {
-
   console.log("Publicación seleccionada con ID:", id);
   idPublicacion.value = id; // Asigna el ID de la publicación seleccionada
   showForm.value = true; // Muestra el formulario de arriendo
 }
-
 
 async function pagar() {
     // Verificar si los valores son correctos
@@ -78,12 +90,44 @@ async function pagar() {
     }
 }
 
+// Método para mostrar el formulario de edición/cancelación
+async function cancelar(id) {
+  console.log("Publicación seleccionada con ID:", id);
+  idArriendo.value = id; // Asigna el ID de la publicación seleccionada
+  showForm.value = true; // Muestra el formulario de arriendo
+}
 
+async function enviarSolicitudCancelacion() {
+  
+  const userId = localStorage.getItem("userId");
+
+  if (!descripcion.value || !idArriendo.value) {
+    alert("Por favor, ingresa una descripción para la cancelación.");
+    return;
+  }
+
+  const solicitudData = {
+    idArriendo: idArriendo.value,
+    descripcion: descripcion.value,
+    cancelacionRealizada: false, 
+  };
+
+  try {
+    const response = await axios.post(`http://localhost:8080/solicitudes`, solicitudData); // Cambié la URL para que coincida con la ruta definida en Spring Boot
+    if (response.status === 200) {
+      alert("Solicitud de cancelación enviada con éxito!");
+      showForm.value = false; // Ocultar el formulario de cancelación
+    }
+  } catch (error) {
+    console.error("Error al enviar la solicitud de cancelación:", error);
+    alert("Hubo un problema al enviar la solicitud.");
+  }
+}
 // Simular carga de notificaciones
 function cargarNotificaciones() {
   notifications.value = [
     { titulo: "Oferta Imperdible!!!!", mensaje: "Cyber monday" },
-    { titulo: "Se ha cancelado su reserva", mensaje: "Su reserva hecha el dia 19/08/2024 fue cancenlada debido a una falla del vehiculo" },
+    { titulo: "Se ha cancelado su reserva", mensaje: "Su reserva hecha el dia 19/08/2024 fue cancelada debido a una falla del vehiculo" },
   ];
 }
 
@@ -96,16 +140,22 @@ function deleteNotification(index) {
 onMounted(() => {
   cargarPublicaciones();
   cargarNotificaciones();
+  cargarVehiculosArrendados();
 });
 
 function direccionamientoMain(){
   window.location.href = '/home'
 }
+
 async function cerrarSesion(){
-      // Limpiar la sesión (si es necesario)
-      localStorage.removeItem('login');
-      direccionamientoMain();
-    }
+  localStorage.removeItem('login');
+  direccionamientoMain();
+}
+const descripcion = ref(''); // Nueva variable reactiva para la descripción
+
+
+
+
 </script>
 
 <template>
@@ -161,6 +211,35 @@ async function cerrarSesion(){
             <button class="boton-pagar" @click.prevent="pagar">Pagar</button> <!-- Evitar el comportamiento predeterminado -->
         </div>  
       </div>
+
+<!-- Sección Vehículos Arrendados -->
+<div v-if="selectedSection === 'Vehículos Arrendados'">
+  <h2>Vehículos Arrendados</h2>
+  <div class="contenedor-publicaciones">
+    <div v-for="(vehiculoArrendado, index) in vehiculosArrendados" :key="index" class="cuadroVehiculo">
+      <div class="detalle">
+        <h3>{{ vehiculoArrendado.vehiculo.marca }} - {{ vehiculoArrendado.vehiculo.anio }}</h3>
+        <p>Fecha de arriendo: {{ vehiculoArrendado.fechaInicio }} - {{ vehiculoArrendado.fechaFin }}</p>
+        <p>Categoría: {{ vehiculoArrendado.vehiculo.categoria }}</p>
+        <p>Modelo: {{ vehiculoArrendado.vehiculo.modelo }}</p>
+        <p>Tipo de transmisión: {{ vehiculoArrendado.vehiculo.tipoTransmision }}</p>
+        <p>Precio: {{ vehiculoArrendado.precio }}</p>
+        <button class="botones-arrendar" @click="cancelar(vehiculoArrendado.idArriendo)">Cancelar Arriendo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Formulario para cancelar arriendo -->
+  <div v-if="showForm" class="formulario-arrendar">
+    <h3>Cancelar Arriendo</h3>
+    <label for="descripcion">Motivo de la cancelación:</label>
+    <textarea id="descripcion" v-model="descripcion" rows="4" cols="50" required></textarea>
+
+    <button class="boton-pagar" @click.prevent="enviarSolicitudCancelacion">Confirmar Cancelación</button>
+  </div>
+</div>
+
+
 
       <!-- Sección Notificaciones -->
       <div v-if="selectedSection === 'Notificaciones'">
@@ -378,4 +457,15 @@ h2 {
 .boton-pagar:hover {
   background-color: #1e7e34;
 }
+.mensaje-no-vehiculos {
+  color: black;
+  font-weight: bold;
+}
+.formulario-arrendar textarea {
+  width: 100%; /* Se ajusta al ancho disponible del contenedor */
+  height: 120px; /* Establece una altura fija */
+  resize: none; /* Desactiva el redimensionamiento manual por el usuario */
+  box-sizing: border-box; /* Asegura que el padding no afecte el tamaño */
+}
+
 </style>
