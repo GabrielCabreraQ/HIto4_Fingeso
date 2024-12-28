@@ -66,14 +66,9 @@
               />
             </div>
             <div>
-              <label>Tipo de Licencia:</label>
-              <input
-                type="text"
-                v-model="newPublication.tipoLicenciaInput"
-                class="input-field"
-                placeholder="Ingrese el tipo de licencia (separadas por comas)"
-                @input="convertirLicenciaEnArray"
-              />
+              <label>Tipo de Licencia:</label> <br>
+              <label><input type="checkbox" name="licencia_b" v-model="newPublication.tipoLicencia" value="B"> B  </label>
+              <label><input type="checkbox" name="licencia_c" v-model="newPublication.tipoLicencia" value="C"> C  </label>
             </div>
             <div>
               <label>Documentos:</label>
@@ -138,14 +133,6 @@ export default {
     };
   },
   methods: {
-    // Convierte la entrada de tipoLicencia a un array de cadenas
-    convertirLicenciaEnArray() {
-      this.newPublication.tipoLicencia = this.tipoLicenciaInput
-        .split(",")
-        .map((item) => item.trim())
-        .filter((item) => item !== "");
-    },
-
     async crearPublicacion() {
       // Validar campos requeridos antes de enviar
       if (
