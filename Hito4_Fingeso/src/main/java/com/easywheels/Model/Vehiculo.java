@@ -16,6 +16,7 @@ public class Vehiculo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idVehiculo;
 
+    private String patente;
     private String marca;
     private String modelo;
     private int anio;
@@ -39,9 +40,10 @@ public class Vehiculo {
     public Vehiculo() {
     }
 
-    public Vehiculo(String marca, String modelo, int anio, String tipoTransmision,
+    public Vehiculo(String patente, String marca, String modelo, int anio, String tipoTransmision,
                     String categoria, String tipoCuerpo, String combustibleAC, List<LocalDate> disponibilidad,
                     Boolean devuelto, Boolean disponible_uso) {
+        this.patente = patente;
         this.marca = marca;
         this.modelo = modelo;
         this.anio = anio;
@@ -57,6 +59,14 @@ public class Vehiculo {
     }
 
     //Getters y setters
+    public String getPatente() {
+        return patente;
+    }
+
+    public void setPatente(String patente) {
+        this.patente = patente;
+    }
+
     public List<Informe> getInformes() {return informes;}
 
     public void setInformes(List<Informe> informes) {this.informes = informes;}
