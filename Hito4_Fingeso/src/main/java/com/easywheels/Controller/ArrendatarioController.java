@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 
@@ -73,4 +75,22 @@ public class ArrendatarioController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado: " + e.getMessage());
         }
     }
+    @GetMapping("/{id}/vehiculos")
+    public ResponseEntity<List<Map<String, Object>>> obtenerVehiculosArrendados(@PathVariable long id) {
+        try {
+            List<Map<String, Object>> vehiculos = arrendatarioService.obtenerVehiculosArrendados(id);
+
+            if (vehiculos == null || vehiculos.isEmpty()) {
+                return ResponseEntity.noContent().build(); // Si no hay vehículos arrendados
+            }
+
+            return ResponseEntity.ok(vehiculos); // Retornar la lista de vehículos
+        } catch (Exception e) {
+            // Manejo de errores si algo sale mal (puedes personalizar la respuesta)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonList(Map.of("error", "Error al obtener vehículos arrendados")));
+        }
+
+    }
+
 }
