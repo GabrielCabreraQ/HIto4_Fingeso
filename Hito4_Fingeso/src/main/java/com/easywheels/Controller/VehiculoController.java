@@ -120,5 +120,20 @@ public class VehiculoController {
         }
     }
 
+    @PostMapping("/{id}/crearinforme")
+    public ResponseEntity<String> CrearInforme(
+            @PathVariable Long id,
+            @RequestBody Informe informeRequest) {
 
+        try {
+            // Llamar al servicio para crear el informe
+            Informe informes = vehiculoService.crearInforme(id, informeRequest.getObservaciones());
+            return ResponseEntity.ok(informes.toString());
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build(); // Retorna 404 si no se encuentra el vehículo
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); // Otro error
+        }
+    }
 }

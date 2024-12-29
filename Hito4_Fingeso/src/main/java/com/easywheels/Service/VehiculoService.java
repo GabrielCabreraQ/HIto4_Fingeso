@@ -122,4 +122,24 @@ public class VehiculoService {
         return informeRepository.findByVehiculoIdVehiculo(idVehiculo);
     }
 
+    public Informe crearInforme(Long idVehiculo, String observaciones) {
+        // Buscar el vehículo
+        Vehiculo vehiculo = vehiculoRepository.findById(idVehiculo)
+                .orElseThrow(() -> new RuntimeException("Vehículo no encontrado"));
+
+        // Crear un nuevo informe
+        Informe nuevoInforme = new Informe(vehiculo, observaciones);
+
+        // Agregar el informe al vehículo
+        vehiculo.agregarInforme(nuevoInforme);
+
+        // Actualizar disponible_uso basado en el informe más reciente
+        vehiculo.setDisponible_uso(nuevoInforme.esVehiculoApto());
+
+        // Guardar cambios en la base de datos
+        vehiculoRepository.save(vehiculo);
+
+        return nuevoInforme;
+    }
+
 }

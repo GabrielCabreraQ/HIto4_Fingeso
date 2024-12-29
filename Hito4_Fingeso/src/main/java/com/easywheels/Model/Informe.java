@@ -31,6 +31,11 @@ public class Informe {
         this.fechaGeneracion = LocalDate.now();
     }
 
+    // Metodo para determinar si el vehículo está en condiciones de uso
+    public boolean esVehiculoApto() {
+        // Implementar aquí la lógica que determine si el vehículo es apto o no
+        return !observaciones.toLowerCase().contains("falla");
+    }
 
     //Getters y Setters
     public Long getId() {
