@@ -17,27 +17,27 @@ values
 insert into arrendatario_tipo_licencia (arrendatario_id_usuario,tipo_licencia)
 values (3,'B'), (3,'C');
 
-INSERT INTO vehiculo (patente, marca, modelo, anio, tipo_transmision, categoria, tipo_cuerpo, combustibleac, devuelto, eliminado)
+INSERT INTO vehiculo (patente, marca, modelo, anio, tipo_transmision, categoria, tipo_cuerpo, combustibleac, devuelto, eliminado, ruta_imagen, disponible_uso)
 VALUES
-    ('JSAS31','Toyota', 'Aygo', 2023, 'M', 'M', 'B', 'R', true, false),
-    ('CCGB91','BMW', 'Mini Cooper', 2022, 'N', 'N', 'C', 'N', true, false),
-    ('SDQA31','Ford', 'Fiesta', 2021, 'C', 'E', 'D', 'D', true, false),
-    ('JD9302','Volkswagen', 'Golf Variant', 2023, 'A', 'H', 'W', 'Q', true, false),
-    ('UDOS01','Honda', 'Civic', 2020, 'B', 'C', 'V', 'H', true, false),
-    ('ASDF23','Tesla', 'Model 3', 2023, 'D', 'D', 'L', 'I', true, false),
-    ('OJNO40','Chevrolet', 'Malibu', 2019, 'M', 'I', 'S', 'E', true, false),
-    ('OIEW34','Mazda', 'MX-5', 2021, 'A', 'J', 'T', 'E', true, false),
-    ('MJNH84','Toyota', 'RAV4', 2020, 'D', 'S', 'F', 'L', true, false),
-    ('MKOP04','Jeep', 'Wrangler', 2023, 'M', 'R', 'J', 'S', true, false),
-    ('UYRI34','Hyundai', 'Santa Fe', 2021, 'D', 'F', 'X', 'A', true, false),
-    ('OIUM09','Ford', 'Ranger', 2022, 'M', 'G', 'P', 'B', true, false),
-    ('POIU94','Audi', 'Q7', 2023, 'D', 'P', 'Q', 'F', true, false),
-    ('MCND98','Porsche', 'Cayenne', 2023, 'B', 'U', 'Z', 'F', true, false),
-    ('YZXC94','Mercedes-Benz', 'S-Class', 2023, 'D', 'L', 'E', 'V', true, false),
-    ('UAQW32','Tesla', 'Model X', 2023, 'B', 'W', 'M', 'Z', true, false),
-    ('YURN94','Winnebago', 'Vista', 2022, 'D', 'O', 'R', 'U', true, false),
-    ('UYRJ93','Ford', 'Transit', 2021, 'B', 'X', 'H', 'X', true, false),
-    ('NJIL93','Suzuki', 'Celerio', 2018, 'M', 'C', 'C', 'N', true, false);
+    ('JSAS31','Toyota', 'Aygo', 2023, 'M', 'M', 'B', 'R', true, false, 'imagenes/autoid1.jpg',true),
+    ('CCGB91','BMW', 'Mini Cooper', 2022, 'N', 'N', 'C', 'N', true, false, 'imagenes/autoid2.jpg',true),
+    ('SDQA31','Ford', 'Fiesta', 2021, 'C', 'E', 'D', 'D', true, false, 'imagenes/autoid3.jpg',true),
+    ('JD9302','Volkswagen', 'Golf Variant', 2023, 'A', 'H', 'W', 'Q', true, false, 'imagenes/autoid4.jpg',true),
+    ('UDOS01','Honda', 'Civic', 2020, 'B', 'C', 'V', 'H', true, false,null,null),
+    ('ASDF23','Tesla', 'Model 3', 2023, 'D', 'D', 'L', 'I', true, false,null,null),
+    ('OJNO40','Chevrolet', 'Malibu', 2019, 'M', 'I', 'S', 'E', true, false,null,null),
+    ('OIEW34','Mazda', 'MX-5', 2021, 'A', 'J', 'T', 'E', true, false,null,null),
+    ('MJNH84','Toyota', 'RAV4', 2020, 'D', 'S', 'F', 'L', true, false,null,null),
+    ('MKOP04','Jeep', 'Wrangler', 2023, 'M', 'R', 'J', 'S', true, false,null,null),
+    ('UYRI34','Hyundai', 'Santa Fe', 2021, 'D', 'F', 'X', 'A', true, false,null,null),
+    ('OIUM09','Ford', 'Ranger', 2022, 'M', 'G', 'P', 'B', true, false,null,null),
+    ('POIU94','Audi', 'Q7', 2023, 'D', 'P', 'Q', 'F', true, false,null,null),
+    ('MCND98','Porsche', 'Cayenne', 2023, 'B', 'U', 'Z', 'F', true, false,null,null),
+    ('YZXC94','Mercedes-Benz', 'S-Class', 2023, 'D', 'L', 'E', 'V', true, false,null,null),
+    ('UAQW32','Tesla', 'Model X', 2023, 'B', 'W', 'M', 'Z', true, false,null,null),
+    ('YURN94','Winnebago', 'Vista', 2022, 'D', 'O', 'R', 'U', true, false,null,null),
+    ('UYRJ93','Ford', 'Transit', 2021, 'B', 'X', 'H', 'X', true, false,null,null),
+    ('NJIL93','Suzuki', 'Celerio', 2018, 'M', 'C', 'C', 'N', true, false,null,null);
 
 insert into catalogo (departamento)
 values

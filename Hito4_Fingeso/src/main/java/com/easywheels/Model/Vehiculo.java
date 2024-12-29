@@ -32,6 +32,7 @@ public class Vehiculo {
     private Boolean devuelto;
 
     private Boolean disponible_uso;
+    private String rutaImagen;
 
     @OneToMany(mappedBy = "vehiculo", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference // Permite la serialización de la lista de informes
@@ -42,7 +43,7 @@ public class Vehiculo {
 
     public Vehiculo(String patente, String marca, String modelo, int anio, String tipoTransmision,
                     String categoria, String tipoCuerpo, String combustibleAC, List<LocalDate> disponibilidad,
-                    Boolean devuelto, Boolean disponible_uso) {
+                    Boolean devuelto, Boolean disponible_uso, String rutaImagen) {
         this.patente = patente;
         this.marca = marca;
         this.modelo = modelo;
@@ -55,7 +56,7 @@ public class Vehiculo {
         this.devuelto = devuelto;
         this.disponible_uso = disponible_uso;
         this.eliminado = false;
-
+        this.rutaImagen = rutaImagen;
     }
 
     //Getters y setters
@@ -174,5 +175,13 @@ public class Vehiculo {
 
     public void setEliminado(boolean eliminado) {
         this.eliminado = eliminado;
+    }
+
+    public String getRutaImagen(){
+        return rutaImagen;
+    }
+
+    public void setRutaImagen(String rutaImagen){
+        this.rutaImagen = rutaImagen;
     }
 }
