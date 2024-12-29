@@ -7,7 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -22,8 +26,19 @@ public class VehiculoController {
     //Crear un nuevo vehículo
     @PostMapping
     public ResponseEntity<Vehiculo> createVehiculo(@RequestBody Vehiculo vehiculo,
-                                                   @RequestParam String permiso) {
+                                                   @RequestParam String permiso,
+                                                   @RequestParam("imagen") MultipartFile imagen) {
         try {
+            // Ruta dentro de resources/static
+            String carpetaImagenes = "src/main/resources/static/imagenes/";
+            String nombreArchivo = UUID.randomUUID().toString() + "_" + imagen.getOriginalFilename();
+            File archivo = new File(carpetaImagenes + nombreArchivo);
+            imagen.transferTo(archivo);
+
+            // Actualizar ruta de la imagen (como será accesible desde el servidor)
+            vehiculo.setRutaImagen("/imagenes/" + nombreArchivo);
+
+
             //Llama al servicio para crear el vehículo
             Vehiculo nuevoVehiculo = vehiculoService.createVehiculo(vehiculo, permiso);
             return new ResponseEntity<>(nuevoVehiculo, HttpStatus.CREATED);

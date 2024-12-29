@@ -188,12 +188,18 @@ const descripcion = ref(''); // Nueva variable reactiva para la descripción
         <h2>Vizualización de Publicaciones</h2>
         <div class="contenedor-publicaciones">
           <div v-for="(publicacion, index) in publicaciones" :key="index" class="cuadroVehiculo">
+
             <div class="detalle">
               <h3>{{ publicacion.vehiculo.marca }} - {{ publicacion.vehiculo.anio }}</h3>
               <p>Precio: ${{ publicacion.precioNormal }}</p>
               <p>Categoría: {{ publicacion.vehiculo.categoria }}</p>
               <p>Modelo: {{ publicacion.vehiculo.modelo }}</p>
               <p>Tipo de transmisión: {{ publicacion.vehiculo.tipoTransmision }}</p>
+
+
+              <img :src="publicacion.vehiculo.rutaImagen" class="imagenVehiculo"/> <br>
+
+
               <button class="botones-arrendar" @click="arrendar(publicacion.idPublicacion)">Arrendar</button>
             </div>
           </div>
@@ -212,32 +218,32 @@ const descripcion = ref(''); // Nueva variable reactiva para la descripción
         </div>  
       </div>
 
-<!-- Sección Vehículos Arrendados -->
-<div v-if="selectedSection === 'Vehículos Arrendados'">
-  <h2>Vehículos Arrendados</h2>
-  <div class="contenedor-publicaciones">
-    <div v-for="(vehiculoArrendado, index) in vehiculosArrendados" :key="index" class="cuadroVehiculo">
-      <div class="detalle">
-        <h3>{{ vehiculoArrendado.vehiculo.marca }} - {{ vehiculoArrendado.vehiculo.anio }}</h3>
-        <p>Fecha de arriendo: {{ vehiculoArrendado.fechaInicio }} - {{ vehiculoArrendado.fechaFin }}</p>
-        <p>Categoría: {{ vehiculoArrendado.vehiculo.categoria }}</p>
-        <p>Modelo: {{ vehiculoArrendado.vehiculo.modelo }}</p>
-        <p>Tipo de transmisión: {{ vehiculoArrendado.vehiculo.tipoTransmision }}</p>
-        <p>Precio: {{ vehiculoArrendado.precio }}</p>
-        <button class="botones-arrendar" @click="cancelar(vehiculoArrendado.idArriendo)">Cancelar Arriendo</button>
+      <!-- Sección Vehículos Arrendados -->
+      <div v-if="selectedSection === 'Vehículos Arrendados'">
+        <h2>Vehículos Arrendados</h2>
+        <div class="contenedor-publicaciones">
+          <div v-for="(vehiculoArrendado, index) in vehiculosArrendados" :key="index" class="cuadroVehiculo">
+            <div class="detalle">
+              <h3>{{ vehiculoArrendado.vehiculo.marca }} - {{ vehiculoArrendado.vehiculo.anio }}</h3>
+              <p>Fecha de arriendo: {{ vehiculoArrendado.fechaInicio }} - {{ vehiculoArrendado.fechaFin }}</p>
+              <p>Categoría: {{ vehiculoArrendado.vehiculo.categoria }}</p>
+              <p>Modelo: {{ vehiculoArrendado.vehiculo.modelo }}</p>
+              <p>Tipo de transmisión: {{ vehiculoArrendado.vehiculo.tipoTransmision }}</p>
+              <p>Precio: {{ vehiculoArrendado.precio }}</p>
+              <button class="botones-arrendar" @click="cancelar(vehiculoArrendado.idArriendo)">Cancelar Arriendo</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario para cancelar arriendo -->
+        <div v-if="showForm" class="formulario-arrendar">
+          <h3>Cancelar Arriendo</h3>
+          <label for="descripcion">Motivo de la cancelación:</label>
+          <textarea id="descripcion" v-model="descripcion" rows="4" cols="50" required></textarea>
+
+          <button class="boton-pagar" @click.prevent="enviarSolicitudCancelacion">Confirmar Cancelación</button>
+        </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Formulario para cancelar arriendo -->
-  <div v-if="showForm" class="formulario-arrendar">
-    <h3>Cancelar Arriendo</h3>
-    <label for="descripcion">Motivo de la cancelación:</label>
-    <textarea id="descripcion" v-model="descripcion" rows="4" cols="50" required></textarea>
-
-    <button class="boton-pagar" @click.prevent="enviarSolicitudCancelacion">Confirmar Cancelación</button>
-  </div>
-</div>
 
 
 
@@ -277,6 +283,20 @@ const descripcion = ref(''); // Nueva variable reactiva para la descripción
 </template>
 
 <style scoped>
+
+
+
+.imagenVehiculo {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+
+
+
+
+
 /* Contenedor Principal */
 .container {
   display: grid;
