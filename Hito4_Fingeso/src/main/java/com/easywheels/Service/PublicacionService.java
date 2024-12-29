@@ -35,6 +35,8 @@ public class PublicacionService {
 
         // Asociar entidades
         publicacion.setVehiculo(vehiculo);
+        publicacion.setCodigoACRISS(vehiculo.getCategoria() + vehiculo.getTipoCuerpo() +
+                vehiculo.getTipoTransmision() + vehiculo.getCombustibleAC());
 
         //Guardar la publicación
         return publicacionRepository.save(publicacion);
