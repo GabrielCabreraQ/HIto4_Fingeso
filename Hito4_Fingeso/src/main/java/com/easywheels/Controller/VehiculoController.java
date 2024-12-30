@@ -23,6 +23,8 @@ public class VehiculoController {
     @Autowired
     private VehiculoService vehiculoService;
 
+
+
     //Crear un nuevo vehículo
     @PostMapping
     public ResponseEntity<Vehiculo> createVehiculo(@RequestBody Vehiculo vehiculo,
@@ -101,6 +103,10 @@ public class VehiculoController {
         List<Vehiculo> vehiculosDisponibles = vehiculoService.obtenerVehiculosDisponibles(fecha, permiso);
         return ResponseEntity.ok(vehiculosDisponibles);
     }
+    @GetMapping("/lista/no-disponible-uso")
+    public List<Vehiculo> mostrarVehiculosNoDisponibles() {
+        return vehiculoService.mostrarVehiculosNoDisponibles();
+    }
 
     @PostMapping("/{id}/devolucion")
     public ResponseEntity<Informe> procesarArriendo(
@@ -151,4 +157,6 @@ public class VehiculoController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); // Otro error
         }
     }
+
+
 }

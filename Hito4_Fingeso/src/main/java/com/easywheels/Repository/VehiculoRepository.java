@@ -16,4 +16,8 @@ public interface VehiculoRepository extends JpaRepository<Vehiculo, Long> {
     List<Vehiculo> findVehiculosDisponibles(@Param("fecha") LocalDate fecha);
 
     List<Vehiculo> findByEliminadoFalse();
+
+    // Consulta personalizada para obtener los vehículos no disponibles
+    @Query("SELECT v FROM Vehiculo v WHERE v.disponible_uso = false")
+    List<Vehiculo> findVehiculosNoDisponibles();
 }
