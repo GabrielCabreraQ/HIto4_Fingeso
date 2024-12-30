@@ -145,4 +145,5 @@ public class VehiculoService {
     public List<Vehiculo> mostrarVehiculosNoDisponibles() {
         return vehiculoRepository.findVehiculosNoDisponibles();
     }
+
 }
