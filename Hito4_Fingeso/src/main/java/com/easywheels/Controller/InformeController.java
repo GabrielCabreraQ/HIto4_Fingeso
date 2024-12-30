@@ -2,6 +2,7 @@ package com.easywheels.Controller;
 
 import com.easywheels.Model.Informe;
 import com.easywheels.Service.InformeService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/informes")
+@CrossOrigin
 public class InformeController {
 
     private final InformeService informeService;

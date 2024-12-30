@@ -39,6 +39,11 @@ const router = createRouter({
       name: 'visita',
       component: () => import('../vistas/visita.vue'),
     },
+    {
+      path: '/mecanico',
+      name: 'mecanico',
+      component: () => import('../vistas/mecanico.vue'),
+    },
   ],
 });
 
