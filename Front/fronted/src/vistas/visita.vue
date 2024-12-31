@@ -102,6 +102,8 @@ async function cerrarSesion(){
               <p>Categoría: {{ publicacion.vehiculo.categoria }}</p>
               <p>Modelo: {{ publicacion.vehiculo.modelo }}</p>
               <p>Tipo de transmisión: {{ publicacion.vehiculo.tipoTransmision }}</p>
+              <p>Patente: {{ publicacion.vehiculo.patente }}</p>
+              <img :src="publicacion.vehiculo.rutaImagen" class="imagenVehiculo"/> <br>
               <button class="botones-arrendar" @click="arrendar(publicacion.idPublicacion)">Arrendar</button>
             </div>
           </div>
@@ -335,5 +337,11 @@ h2 {
 
 .boton-pagar:hover {
   background-color: #1e7e34;
+}
+
+.imagenVehiculo {
+  width: 50%;
+  text-align: center;
+  border-radius: 8px;
 }
 </style>

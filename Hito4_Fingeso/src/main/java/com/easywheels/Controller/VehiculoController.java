@@ -11,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -33,7 +32,7 @@ public class VehiculoController {
         try {
             // Ruta dentro de resources/static
             String carpetaImagenes = "src/main/resources/static/imagenes/";
-            String nombreArchivo = UUID.randomUUID().toString() + "_" + imagen.getOriginalFilename();
+            String nombreArchivo = imagen.getOriginalFilename();
             File archivo = new File(carpetaImagenes + nombreArchivo);
             imagen.transferTo(archivo);
 

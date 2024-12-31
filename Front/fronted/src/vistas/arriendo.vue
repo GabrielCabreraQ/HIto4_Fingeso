@@ -195,10 +195,8 @@ const descripcion = ref(''); // Nueva variable reactiva para la descripción
               <p>Categoría: {{ publicacion.vehiculo.categoria }}</p>
               <p>Modelo: {{ publicacion.vehiculo.modelo }}</p>
               <p>Tipo de transmisión: {{ publicacion.vehiculo.tipoTransmision }}</p>
-
-
+              <p>Patente: {{ publicacion.vehiculo.patente }}</p>
               <img :src="publicacion.vehiculo.rutaImagen" class="imagenVehiculo"/> <br>
-
 
               <button class="botones-arrendar" @click="arrendar(publicacion.idPublicacion)">Arrendar</button>
             </div>
@@ -230,6 +228,8 @@ const descripcion = ref(''); // Nueva variable reactiva para la descripción
               <p>Modelo: {{ vehiculoArrendado.vehiculo.modelo }}</p>
               <p>Tipo de transmisión: {{ vehiculoArrendado.vehiculo.tipoTransmision }}</p>
               <p>Precio: {{ vehiculoArrendado.precio }}</p>
+              <p>Patente: {{ vehiculoArrendado.vehiculo.patente }}</p>
+              <img :src="vehiculoArrendado.vehiculo.rutaImagen" class="imagenVehiculo"/> <br>
               <button class="botones-arrendar" @click="cancelar(vehiculoArrendado.idArriendo)">Cancelar Arriendo</button>
             </div>
           </div>
@@ -488,4 +488,8 @@ h2 {
   box-sizing: border-box; /* Asegura que el padding no afecte el tamaño */
 }
 
+.imagenVehiculo {
+  width: 50%;
+  text-align: center;
+}
 </style>

@@ -19,10 +19,10 @@ values (3,'B'), (3,'C');
 
 INSERT INTO vehiculo (patente, marca, modelo, anio, tipo_transmision, categoria, tipo_cuerpo, combustibleac, devuelto, eliminado, ruta_imagen, disponible_uso)
 VALUES
-    ('JSAS31','Toyota', 'Aygo', 2023, 'M', 'M', 'B', 'R', true, false, 'imagenes/autoid1.jpg',true),
-    ('CCGB91','BMW', 'Mini Cooper', 2022, 'N', 'N', 'C', 'N', true, false, 'imagenes/autoid2.jpg',true),
-    ('SDQA31','Ford', 'Fiesta', 2021, 'C', 'E', 'D', 'D', true, false, 'imagenes/autoid3.jpg',true),
-    ('JD9302','Volkswagen', 'Golf Variant', 2023, 'A', 'H', 'W', 'Q', true, false, 'imagenes/autoid4.jpg',true),
+    ('JSAS31','Toyota', 'Aygo', 2023, 'M', 'M', 'B', 'R', true, false, 'http://localhost:8080/imagenes/autoid1.jpg',true),
+    ('CCGB91','BMW', 'Mini Cooper', 2022, 'N', 'N', 'C', 'N', true, false, 'http://localhost:8080/imagenes/autoid2.jpg',true),
+    ('SDQA31','Ford', 'Fiesta', 2021, 'C', 'E', 'D', 'D', true, false, 'http://localhost:8080/imagenes/autoid3.jpg',true),
+    ('JD9302','Volkswagen', 'Golf Variant', 2023, 'A', 'H', 'W', 'Q', true, false, 'http://localhost:8080/imagenes/autoid4.jpg',true),
     ('UDOS01','Honda', 'Civic', 2020, 'B', 'C', 'V', 'H', true, false,null,null),
     ('ASDF23','Tesla', 'Model 3', 2023, 'D', 'D', 'L', 'I', true, false,null,null),
     ('OJNO40','Chevrolet', 'Malibu', 2019, 'M', 'I', 'S', 'E', true, false,null,null),
