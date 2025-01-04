@@ -36,6 +36,10 @@ function direccionamientoUsuarioAdmin(){
   window.location.href = '/admin';
 }
 
+function direccionamientoUsuarioMecanico(){
+  window.location.href = '/mecanico';
+}
+
 function direccionamientoUsuarioArrendatario(){
   window.location.href = '/arriendo';
 }
@@ -84,6 +88,13 @@ export default{
           alert("Credenciales válidas para arrendatario")
           localStorage.setItem("userId", datosUsuario.idUsuario);
           window.location.href = '/arriendo'; 
+          localStorage.setItem("login", JSON.stringify(datosUsuario));
+          return 0;
+        }
+        if (datosUsuario.tipo_usuario == "Mecanico"){
+          alert("Credenciales válidas para mecanico")
+          localStorage.setItem("userId", datosUsuario.idUsuario);
+          window.location.href = '/mecanico'; 
           localStorage.setItem("login", JSON.stringify(datosUsuario));
           return 0;
         }
