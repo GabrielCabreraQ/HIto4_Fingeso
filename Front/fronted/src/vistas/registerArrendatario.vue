@@ -3,7 +3,7 @@
     <!-- Barra de menú -->
     <div class="menu-bar">
       <div class="logo">Registro de Arrendatarios</div>
-        <button @click="goTologin" class="menu-button">Iniciar sesion</button>
+      <button @click="goTologin" class="menu-button">Iniciar sesión</button>
     </div>
 
     <!-- Contenedor principal -->
@@ -19,12 +19,14 @@
             <div>
               <label>Rut:</label>
               <input
-                type="textRut"
+                type="text"
                 v-model="newPublication.rutUsuario"
                 class="input-field"
-                placeholder="Ingrese su Rut sin puntos ni guion"
+                placeholder="Ingrese su Rut sin puntos con guion"
+                @blur="validarRut"
                 required
               />
+              <span v-if="errores.rut" class="error-message">{{ errores.rut }}</span>
             </div>
             <div>
               <label>Nombre:</label>
@@ -43,8 +45,10 @@
                 v-model="newPublication.correoUsuario"
                 class="input-field"
                 placeholder="Ingrese su correo electrónico"
+                @blur="validarCorreo"
                 required
               />
+              <span v-if="errores.correo" class="error-message">{{ errores.correo }}</span>
             </div>
             <div>
               <label>Contraseña:</label>
@@ -53,8 +57,10 @@
                 v-model="newPublication.contraseniaUsuario"
                 class="input-field"
                 placeholder="Ingrese su contraseña"
+                @blur="validarContrasena"
                 required
               />
+              <span v-if="errores.contrasena" class="error-message">{{ errores.contrasena }}</span>
             </div>
             <div>
               <label>Teléfono:</label>
@@ -63,8 +69,10 @@
                 v-model="newPublication.telefonoUsuario"
                 class="input-field"
                 placeholder="Ingrese su número telefónico"
+                @blur="validarTelefono"
                 required
               />
+              <span v-if="errores.telefono" class="error-message">{{ errores.telefono }}</span>
             </div>
             <div>
               <label>Fecha de Nacimiento:</label>
@@ -121,8 +129,8 @@
 <script>
 import axios from "axios";
 
-function direccionamientologin(){
-  window.location.href = '/login'
+function direccionamientologin() {
+  window.location.href = '/login';
 }
 
 export default {
@@ -139,40 +147,73 @@ export default {
         documentos: [],
       },
       nuevoDocumento: "", // Campo temporal para añadir documentos
-      tipoLicenciaInput: "", // Valor del campo de entrada para tipos de licencia
+      errores: {
+        rut: "",
+        contrasena: "",
+        telefono: "",
+        correo: "",
+      },
     };
   },
   methods: {
     async crearPublicacion() {
-      // Validar campos requeridos antes de enviar
-      if (
-        this.newPublication.nombreUsuario &&
-        this.newPublication.correoUsuario &&
-        this.newPublication.contraseniaUsuario &&
-        this.newPublication.telefonoUsuario &&
-        this.newPublication.fechaNacimiento &&
-        this.newPublication.tipoLicencia
-      ) {
+      if (this.validarFormulario()) {
         try {
           const response = await axios.post(
             import.meta.env.VITE_BASE_URL + "arrendatarios/register",
             this.newPublication
           );
-          
-          // Verificar si la respuesta es null
           if (response.data === null) {
             alert("Este correo electrónico ya está registrado.");
           } else {
-            console.log("Publicación creada con éxito:", response.data);
             alert("Registro exitoso");
             this.goTologin();
           }
         } catch (error) {
           console.error("Error al crear la publicación:", error);
         }
-      } else {
-        alert("Por favor, complete todos los campos obligatorios");
       }
+    },
+    validarRut() {
+      const rutRegex = /^[0-9]+-[0-9kK]{1}$/;
+      if (!rutRegex.test(this.newPublication.rutUsuario)) {
+        this.errores.rut = "El RUT ingresado no es válido.";
+      } else {
+        this.errores.rut = "";
+      }
+    },
+    validarContrasena() {
+      const contrasenaRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+      if (!contrasenaRegex.test(this.newPublication.contraseniaUsuario)) {
+        this.errores.contrasena =
+          "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una minúscula y un número.";
+      } else {
+        this.errores.contrasena = "";
+      }
+    },
+    validarTelefono() {
+      const telefonoRegex = /^\+?[0-9]{9,12}$/;
+      if (!telefonoRegex.test(this.newPublication.telefonoUsuario)) {
+        this.errores.telefono = "El número telefónico ingresado no es válido.";
+      } else {
+        this.errores.telefono = "";
+      }
+    },
+    validarCorreo() {
+    const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!correoRegex.test(this.newPublication.correoUsuario)) {
+      this.errores.correo = "El correo ingresado no es válido.";
+      } else {
+        this.errores.correo = "";
+      }
+  },
+
+    validarFormulario() {
+      this.validarRut();
+      this.validarContrasena();
+      this.validarTelefono();
+      this.validarCorreo();
+      return !this.errores.rut && !this.errores.contrasena && !this.errores.telefono && !this.errores.correo;
     },
     agregarDocumento() {
       if (this.nuevoDocumento.trim()) {
@@ -183,8 +224,7 @@ export default {
     eliminarDocumento(index) {
       this.newPublication.documentos.splice(index, 1);
     },
-
-    async goTologin(){
+    async goTologin() {
       direccionamientologin();
     },
   },
@@ -304,5 +344,9 @@ html {
 .action-button:hover {
   background-color: #1c6dd0;
   transform: scale(1.05);
+}
+.error-message {
+  color: red;
+  font-size: 0.9em;
 }
 </style>

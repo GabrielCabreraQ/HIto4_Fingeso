@@ -115,6 +115,29 @@
         </div>
       </div>
 
+      <!-- Sección para Solicitudes de Cancelación -->
+      <div v-if="selectedSection === 'Solicitudes de Cancelación'">
+        <h2>Solicitudes de Cancelación</h2>
+        <!-- Tabla de solicitudes de cancelación -->
+        <table class="publication-table">
+          <thead>
+            <tr>
+              <th>ID Arriendo</th>
+              <th>Descripción</th>
+              <th>Estado de Cancelación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(solicitud, index) in solicitudesCancelacion" :key="solicitud.id">
+              <td>{{ solicitud.idArriendo }}</td>
+              <td>{{ solicitud.descripcion }}</td>
+              <td>{{ solicitud.cancelacionRealizada ? 'Realizada' : 'Pendiente' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
       <!-- Gestión de Vehículos -->
       <div v-if="selectedSection === 'Gestión de Vehiculos'">
         <h2>Gestión de Vehículos</h2>
@@ -346,6 +369,7 @@ export default {
         "Gestión de Vehiculos", 
         "Informes",
         "Boletas",
+        "Solicitudes de Cancelación",
         "Cerrar Sesión",
       ],
       selectedSection: "Gestión de Publicaciones",
@@ -387,7 +411,8 @@ export default {
         },
 
         vehiculos: [], // Lista de vehículos
-        
+        selectedSection: null,
+        solicitudesCancelacion: [],
         publications: [], // Lista de publicaciones
         isEditing: false, // Controla si el formulario de edición está visible
         editedPublication: {}, // Datos de la publicación que estamos editando
@@ -404,6 +429,9 @@ export default {
       }
       if(section === "Gestión de Vehiculos" && !this.showForm){
         this.fetchVehiculos();
+      }
+      if(section == "Solicitudes de Cancelación" && !this.showForm){
+        this.obtenerSolicitudesCancelacion();
       }
     },
     async cerrarSesion(){
@@ -552,6 +580,26 @@ export default {
       alert("No se pudo obtener la lista de vehículos. Verifica tu conexión.");
     }
   },
+
+  async obtenerSolicitudesCancelacion() {
+    try {
+      const response = await axios.get('http://localhost:8080/solicitudes');
+      if (response == null) {
+        alert("No se pudo obtener la lista de vehículos. Verifica tu conexión.");
+      }
+      this.solicitudesCancelacion = response.data;
+    } catch (error) {
+      console.error('Error al obtener las solicitudes de cancelación:', error);
+    }
+  },
+
+  changeSection(section) {
+    this.selectedSection = section;
+    if (section === 'Solicitudes de Cancelación') {
+      this.obtenerSolicitudesCancelacion();  // Cargar las solicitudes cuando se accede a esta sección
+    }
+  },
+
     async addVehiculo(){
       const vehiculo = {
         marca: this.newVehiculo.marca,
