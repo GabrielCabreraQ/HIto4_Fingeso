@@ -122,4 +122,50 @@ public class PublicacionService {
                 ", Precio: " + publicacion.getPrecioNormal();
     }
 
+
+    public List<Publicacion> filtrarPublicaciones(String marca, String tipoTransmision, Integer anioMin,
+                                                  Integer anioMax, Double precioMin, Double precioMax,
+                                                  String fechaInicio, String fechaFin) {
+        return publicacionRepository.findAll().stream()
+                .filter(publicacion -> {
+                    Vehiculo vehiculo = publicacion.getVehiculo();
+
+                    // Filtrar por marca
+                    if (marca != null && !vehiculo.getMarca().equalsIgnoreCase(marca)) {
+                        return false;
+                    }
+
+                    // Filtrar por tipo de transmisión
+                    if (tipoTransmision != null && !vehiculo.getTipoTransmision().equalsIgnoreCase(tipoTransmision)) {
+                        return false;
+                    }
+
+                    // Filtrar por año mínimo
+                    if (anioMin != null && vehiculo.getAnio() < anioMin) {
+                        return false;
+                    }
+
+                    // Filtrar por año máximo
+                    if (anioMax != null && vehiculo.getAnio() > anioMax) {
+                        return false;
+                    }
+
+                    // Filtrar por precio mínimo
+                    if (precioMin != null && publicacion.getPrecioNormal() < precioMin) {
+                        return false;
+                    }
+
+                    // Filtrar por precio máximo
+                    if (precioMax != null && publicacion.getPrecioNormal() > precioMax) {
+                        return false;
+                    }
+
+                    //FALTA EL FILTRO DE FECHAS
+
+
+                    return true;
+                })
+                .collect(Collectors.toList());
+    }
+
 }

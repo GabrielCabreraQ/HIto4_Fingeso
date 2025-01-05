@@ -17,6 +17,59 @@ const idPublicacion = ref(null); // ID de la publicación seleccionada
 const idArriendo = ref(null);
 const arrendamientoExitoso = ref(false); // Flag para saber si el arriendo fue exitoso
 
+const publicacionesFiltradas = ref([]); // Publicaciones filtradas
+const mostrarFiltros = ref(false); // Controla la visualización del panel de filtros
+// Variables de filtro
+const filtros = ref({
+  marca: '',
+  tipoTransmision: '',
+  anioMin: null,
+  anioMax: null,
+  precioMin: null,
+  precioMax: null,
+  fechaInicio: null,
+  fechaFin: null,
+});
+
+
+// Función para alternar la visualización de los filtros
+function toggleFiltros() {
+  mostrarFiltros.value = !mostrarFiltros.value;
+}
+
+async function aplicarFiltros() {
+  try {
+    const response = await axios.get('http://localhost:8080/publicaciones/filtrar', {
+      params: {
+        marca: filtros.value.marca || null,
+        tipoTransmision: filtros.value.tipoTransmision || null,
+        anioMin: filtros.value.anioMin || null,
+        anioMax: filtros.value.anioMax || null,
+        precioMin: filtros.value.precioMin || null,
+        precioMax: filtros.value.precioMax || null,
+        fechaInicio: filtros.value.fechaInicio || null,
+        fechaFin: filtros.value.fechaFin || null,
+      },
+    });
+    publicaciones.value = response.data; // Actualizar publicaciones con las filtradas
+    mostrarFiltros.value = false; // Ocultar panel de filtros después de aplicar
+  } catch (error) {
+    console.error('Error al aplicar los filtros:', error);
+  }
+}
+
+// Función para comprobar si hay filtros activos
+function hayFiltrosActivos() {
+  return Object.values(filtros.value).some((valor) => valor !== '' && valor !== null);
+}
+// Función para borrar filtros
+function borrarFiltros() {
+  Object.keys(filtros.value).forEach((key) => {
+    filtros.value[key] = typeof filtros.value[key] === 'string' ? '' : null;
+  });
+  cargarPublicaciones(); // Cargar todas las publicaciones iniciales
+}
+
 // Método para cambiar de sección
 function changeSection(section) {
   selectedSection.value = section;
@@ -186,6 +239,61 @@ const descripcion = ref(''); // Nueva variable reactiva para la descripción
       <!-- Sección Publicaciones -->
       <div v-if="selectedSection === 'Vizualizar Publicaciones'">
         <h2>Vizualización de Publicaciones</h2>
+
+        <!-- Botones de filtros -->
+        <div class="filtro-botones">
+          <button @click="toggleFiltros" class="filter-toggle-button">
+            {{ mostrarFiltros ? 'Ocultar Filtros' : 'Mostrar Filtros' }}
+          </button>
+          <button
+            v-if="hayFiltrosActivos()"
+            @click="borrarFiltros"
+            class="boton-borrar-filtros"
+          >
+            Borrar Filtros
+          </button>
+        </div>
+
+        <!-- Panel de filtros -->
+        <div v-if="mostrarFiltros" class="filtro-panel">
+  <h3 class="filtro-titulo">Opciones de Filtrado</h3>
+  <form @submit.prevent="aplicarFiltros" class="form-filtros">
+    <div class="campo">
+      <label for="marca">Marca:</label>
+      <input type="text" id="marca" v-model="filtros.marca" placeholder="Ej. Toyota" />
+    </div>
+    <div class="campo">
+      <label for="tipoTransmision">Transmisión:</label>
+      <input id="tipoTransmision" v-model="filtros.tipoTransmision">
+    </div>
+    <div class="campo">
+      <label for="anioMin">Año mínimo:</label>
+      <input type="number" id="anioMin" v-model="filtros.anioMin" />
+    </div>
+    <div class="campo">
+      <label for="anioMax">Año máximo:</label>
+      <input type="number" id="anioMax" v-model="filtros.anioMax" />
+    </div>
+    <div class="campo">
+      <label for="precioMin">Precio mínimo:</label>
+      <input type="number" id="precioMin" v-model="filtros.precioMin" />
+    </div>
+    <div class="campo">
+      <label for="precioMax">Precio máximo:</label>
+      <input type="number" id="precioMax" v-model="filtros.precioMax" />
+    </div>
+    <div class="campo">
+      <label for="fechaInicio">Fecha de inicio:</label>
+      <input type="date" id="fechaInicio" v-model="filtros.fechaInicio" />
+    </div>
+    <div class="campo">
+      <label for="fechaFin">Fecha de fin:</label>
+      <input type="date" id="fechaFin" v-model="filtros.fechaFin" />
+    </div>
+    <button type="submit" class="boton-aplicar">Aplicar Filtros</button>
+  </form>
+</div>
+
         <div class="contenedor-publicaciones">
           <div v-for="(publicacion, index) in publicaciones" :key="index" class="cuadroVehiculo">
 
@@ -492,4 +600,96 @@ h2 {
   width: 50%;
   text-align: center;
 }
+/* Contenedor del panel de filtros */
+.filtro-panel {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Título del panel */
+.filtro-titulo {
+  font-size: 1.5rem;
+  color: #000000;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Formulario */
+.form-filtros {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 columnas */
+  gap: 5px;
+}
+
+/* Estilos para cada campo */
+.campo {
+  display: flex;
+  flex-direction: column;
+}
+
+.campo label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.campo input,
+.campo select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+/* Botón para aplicar filtros */
+.boton-aplicar {
+  grid-column: span 2; /* Ocupa ambas columnas */
+  padding: 12px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.boton-aplicar:hover {
+  background-color: #218838;
+}
+
+/* Efectos visuales */
+.campo input:focus,
+.campo select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+/* Botones de filtros */
+.botones-filtros {
+  display: flex;
+  justify-content: space-between;
+  grid-column: span 2; /* Ambos botones ocupan toda la fila */
+}
+
+.boton-borrar-filtros {
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.boton-borrar-filtros:hover {
+  background-color: #c82333;
+}
+
+
 </style>

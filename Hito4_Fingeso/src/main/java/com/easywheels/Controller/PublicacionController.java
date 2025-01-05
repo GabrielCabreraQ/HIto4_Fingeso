@@ -92,4 +92,25 @@ public class PublicacionController {
         Publicacion publicacion = publicacionService.getPublicacionById(id);
         return publicacionService.visualizarVehiculo(publicacion);
     }
+
+    @GetMapping("/filtrar")
+    public ResponseEntity<List<Publicacion>> filtrarPublicaciones(
+            @RequestParam(required = false) String marca,
+            @RequestParam(required = false) String tipoTransmision,
+            @RequestParam(required = false) Integer anioMin,
+            @RequestParam(required = false) Integer anioMax,
+            @RequestParam(required = false) Double precioMin,
+            @RequestParam(required = false) Double precioMax,
+            @RequestParam(required = false) String fechaInicio,
+            @RequestParam(required = false) String fechaFin
+    )
+
+    {
+        List<Publicacion> publicacionesFiltradas = publicacionService.filtrarPublicaciones(
+                marca, tipoTransmision, anioMin, anioMax, precioMin, precioMax, fechaInicio, fechaFin
+        );
+        return ResponseEntity.ok(publicacionesFiltradas);
+    }
+
+
 }
