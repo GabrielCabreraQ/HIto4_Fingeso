@@ -49,20 +49,20 @@ public class ArrendatarioService {
 
     public boolean verificarDisponibilidad(Vehiculo vehiculo, LocalDate fechaInicio, LocalDate fechaFinal) {
         // Consultar en la base de datos los arriendos para este vehículo
-        List<Arriendo> arriendos = arriendoRepository.findByVehiculoId(vehiculo.getIdVehiculo());
+        List<LocalDate> arriendos = vehiculo.getDisponibilidad();
+        int cantidadArriendo = arriendos.size();
 
         // Verificar si hay conflictos de fechas
-        for (Arriendo arriendo : arriendos) {
-            LocalDate inicioArriendo = arriendo.getFechaInicio();
-            LocalDate finArriendo = arriendo.getFechaFin();
+        for (int i = 0; i < cantidadArriendo; i += 2) {
+            LocalDate inicioReserva = arriendos.get(i);
+            LocalDate finReserva = arriendos.get(i + 1);
 
-            // Si hay cualquier intersección entre el rango solicitado y un arriendo existente, no está disponible
-            if (!(fechaFinal.isBefore(inicioArriendo) || fechaInicio.isAfter(finArriendo))) {
+            // Verificar si las fechas se solapan
+            if (!(fechaFinal.isBefore(inicioReserva) || fechaInicio.isAfter(finReserva))) {
                 return false;
             }
         }
-
-        // Si no hay conflictos, el vehículo está disponible
+        // ninguna fecha se solapo
         return true;
     }
 
@@ -96,7 +96,7 @@ public class ArrendatarioService {
             }
 
             // Verificar disponibilidad del vehículo
-            if (!verificarDisponibilidad(vehiculo, fechaInicio, fechaFinal)) {
+            if (!verificarDisponibilidad(vehiculo, fechaInicio, fechaFinal.plusDays(1))) {
                 return ResponseEntity.badRequest().body("El vehículo no está disponible en las fechas seleccionadas.");
             }
 
@@ -126,6 +126,10 @@ public class ArrendatarioService {
 
             // Cambiar el estado del vehículo
             vehiculo.setDevuelto(false);
+            List<LocalDate> reserva = vehiculo.getDisponibilidad();
+            reserva.add(fechaInicio);
+            reserva.add(fechaFinal.plusDays(1));
+            vehiculo.setDisponibilidad(reserva);
             vehiculoRepository.save(vehiculo);
 
             return ResponseEntity.ok(arriendo); // Respuesta exitosa con el arriendo
@@ -160,4 +164,6 @@ public class ArrendatarioService {
                 })
                 .collect(Collectors.toList());
     }
+
+
 }

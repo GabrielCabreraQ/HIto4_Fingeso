@@ -300,63 +300,6 @@
         </div>
       </div>
 
-
-      <!-- Informes -->
-      <div v-else-if="selectedSection === 'Informes'">
-        <h2>Informes</h2>
-        <!-- Tabla de informes -->
-        <table class="publication-table">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Descargar</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Informe 1</td>
-              <td>
-                <button class="Descargar">⬇️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Informe 2</td>
-              <td>
-                <button class="descarga-button">⬇️</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Boletas -->
-      <div v-else-if="selectedSection === 'Boletas'">
-        <h2>Acá se mostrará un listado de boletas para visualizar</h2>
-
-        <table class="publication-table">
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Descargar</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Boleta 1</td>
-              <td>
-                <button class="Descargar">⬇️</button>
-              </td>
-            </tr>
-            <tr>
-              <td>Boleta 2</td>
-              <td>
-                <button class="descarga-button">⬇️</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
       <!-- Cerrar Sesion -->
       <div v-else-if="selectedSection === 'Cerrar Sesión'">
         <div class="actions">
@@ -381,8 +324,6 @@ export default {
       menuItems: [
         "Gestión de Publicaciones",
         "Gestión de Vehiculos", 
-        "Informes",
-        "Boletas",
         "Solicitudes de Cancelación",
         "Cerrar Sesión",
       ],

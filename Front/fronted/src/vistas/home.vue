@@ -4,8 +4,6 @@
         <div class="logo">EasyWheels</div>
         <nav class="menu">
           <button @click="goToLogin" class="menu-button">Iniciar Sesión</button>
-          <button @click="goToCatalog" class="menu-button">Catálogo</button>
-          <button @click="goToCustomerService" class="menu-button">Servicio al Cliente</button>
           <button @click="goToRegister" class="menu-button">Registrarse</button>
         </nav>
       </header>
