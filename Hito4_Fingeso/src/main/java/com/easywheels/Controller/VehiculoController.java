@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -139,6 +138,28 @@ public class VehiculoController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR); // Otro error
         }
     }
+
+    @GetMapping("/{id}/informe")
+    public ResponseEntity<List<Informe>> obtenerInformesPorID(
+            @PathVariable Long id,
+            @RequestParam String permiso) {
+
+        try {
+            // Verificar permiso
+            if (!permiso.equalsIgnoreCase("administrador")) {
+                throw new IllegalStateException("Acceso denegado: Solo los administradores pueden realizar esta consulta.");
+            }
+
+            // Llamar al servicio para obtener los informes
+            List<Informe> informes = vehiculoService.obtenerInformesPorVehiculo(id);
+            return ResponseEntity.ok(informes); // Devolver la lista directamente como JSON
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build(); // Retorna 404 si no se encuentra el vehículo
+        }
+    }
+
+
 
     @PostMapping("/{id}/crearinforme")
     public ResponseEntity<String> CrearInforme(
