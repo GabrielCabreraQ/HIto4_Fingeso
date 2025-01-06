@@ -15,14 +15,20 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
             "(:anioMin IS NULL OR p.vehiculo.anio >= :anioMin) AND " +
             "(:anioMax IS NULL OR p.vehiculo.anio <= :anioMax) AND " +
             "(:precioMin IS NULL OR p.precioNormal >= :precioMin) AND " +
-            "(:precioMax IS NULL OR p.precioNormal <= :precioMax)")
+            "(:precioMax IS NULL OR p.precioNormal <= :precioMax) AND " +
+            "(:fechaInicio IS NULL OR :fechaFin IS NULL OR " +
+            "NOT EXISTS (SELECT a FROM Arriendo a WHERE " +
+            "a.vehiculo.idVehiculo = p.vehiculo.idVehiculo AND " +
+            "a.fechaInicio <= :fechaFin AND a.fechaFin >= :fechaInicio))")
     List<Publicacion> filtrarPublicaciones(
             @Param("marca") String marca,
             @Param("tipoTransmision") String tipoTransmision,
             @Param("anioMin") Integer anioMin,
             @Param("anioMax") Integer anioMax,
             @Param("precioMin") Double precioMin,
-            @Param("precioMax") Double precioMax
+            @Param("precioMax") Double precioMax,
+            @Param("fechaInicio") LocalDate fechaInicio,
+            @Param("fechaFin") LocalDate fechaFin
     );
 }
 

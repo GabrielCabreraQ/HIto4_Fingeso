@@ -13,6 +13,10 @@ public interface ArriendoRepository extends JpaRepository<Arriendo, Integer> {
     // JpaRepository ya incluye el método save por defecto.
     @Query("SELECT a FROM Arriendo a WHERE a.vehiculo.idVehiculo = :vehiculoId")
     List<Arriendo> findByVehiculoId(@Param("vehiculoId") Long vehiculoId);
+
     @Query("SELECT a FROM Arriendo a WHERE a.arrendatario.idUsuario = :clienteId")
     List<Arriendo> findByArrendatarioId(Integer clienteId);
+
+
+
 }

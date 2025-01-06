@@ -1,12 +1,15 @@
 package com.easywheels.Service;
 
+import com.easywheels.Model.Arriendo;
 import com.easywheels.Model.Vehiculo;
 import com.easywheels.Model.Publicacion;
+import com.easywheels.Repository.ArriendoRepository;
 import com.easywheels.Repository.PublicacionRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +23,9 @@ public class PublicacionService {
 
     @Autowired
     private CatalogoService CatalogoService;
+
+    @Autowired
+    private ArriendoRepository ArriendoRepository;
 
     // Metodo para verificar el permiso
     private void verificarPermisosAdmin(String permiso) {
@@ -126,6 +132,9 @@ public class PublicacionService {
     public List<Publicacion> filtrarPublicaciones(String marca, String tipoTransmision, Integer anioMin,
                                                   Integer anioMax, Double precioMin, Double precioMax,
                                                   String fechaInicio, String fechaFin) {
+        LocalDate inicio = (fechaInicio != null) ? LocalDate.parse(fechaInicio) : null;
+        LocalDate fin = (fechaFin != null) ? LocalDate.parse(fechaFin) : null;
+
         return publicacionRepository.findAll().stream()
                 .filter(publicacion -> {
                     Vehiculo vehiculo = publicacion.getVehiculo();
@@ -160,8 +169,14 @@ public class PublicacionService {
                         return false;
                     }
 
-                    //FALTA EL FILTRO DE FECHAS
-
+                    // Filtrar por arriendos asociados al vehículo
+                    if (inicio != null && fin != null) {
+                        List<Arriendo> arriendos = ArriendoRepository.findByVehiculoId(vehiculo.getIdVehiculo());
+                        if (arriendos.stream().anyMatch(arriendo ->
+                                (arriendo.getFechaInicio().isBefore(fin) && arriendo.getFechaFin().isAfter(inicio)))) {
+                            return false; // Excluir publicación si el vehículo tiene un arriendo en el rango de fechas
+                        }
+                    }
 
                     return true;
                 })
