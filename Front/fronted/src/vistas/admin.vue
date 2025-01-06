@@ -213,7 +213,7 @@
           <h3>Editar Vehículo</h3>
           <form @submit.prevent="updateVehiculo">
             <label for="id_vehiculo">Id Vehiculo:</label>
-            <input type="text" id="id_vehiculo" v-model="currentVehiculo.id_vehiculo" required />
+            <input type="text" id="id_vehiculo" v-model="currentVehiculo.idVehiculo" required />
 
             <label for="marca">Marca:</label>
             <input type="text" id="marca" v-model="currentVehiculo.marca" required />
@@ -225,16 +225,19 @@
             <input type="number" id="anio" v-model="currentVehiculo.anio" required />
 
             <label for="transmision">Tipo de Transmisión:</label>
-            <input type="text" id="transmision" v-model="currentVehiculo.tipoDeTransmision" required />
+            <input type="text" id="transmision" v-model="currentVehiculo.tipoTransmision" required />
 
             <label for="categoria">Categoría:</label>
             <input type="text" id="categoria" v-model="currentVehiculo.categoria" required />
 
             <label for="tipoCuerpo">Tipo de Cuerpo:</label>
-            <input type="text" id="tipoCuerpo" v-model="currentVehiculo.tipo_cuerpo" required />
+            <input type="text" id="tipoCuerpo" v-model="currentVehiculo.tipoCuerpo" required />
 
             <label for="combustible">Combustible:</label>
             <input type="text" id="combustible" v-model="currentVehiculo.combustibleAC" required />
+
+            <label for="patente">patente:</label>
+            <input type="text" id="patente" v-model="currentVehiculo.patente" required />
 
             <label for="disponibilidad">Disponible para arrendar:</label>
             <input type="checkbox" id="disponibilidad" v-model="currentVehiculo.disponible_uso" />
@@ -407,6 +410,8 @@ export default {
           categoria: '',
           tipo_cuerpo: '',
           combustibleAC: '',
+          patente: '',
+          url: '',
           disponible_uso: false
         },
 
@@ -630,6 +635,7 @@ export default {
             categoria: '',
             tipoDeCuerpo: '',
             combustibleAC: '',
+            patente: '',
             disponible_uso: false
         };
       } catch(error){
@@ -678,14 +684,16 @@ export default {
       }
 
       const vehiculoToUpdate = {
-        id_vehiculo: this.currentVehiculo.id_vehiculo,
+        id_vehiculo: this.currentVehiculo.idVehiculo,
         marca: this.currentVehiculo.marca,
         modelo: this.currentVehiculo.modelo,
         anio: this.currentVehiculo.anio,
-        tipoTransmision: this.currentVehiculo.tipoDeTransmision,
+        tipoTransmision: this.currentVehiculo.tipoTransmision,
         categoria: this.currentVehiculo.categoria,
-        tipoCuerpo: this.currentVehiculo.tipoDeCuerpo,
+        tipoCuerpo: this.currentVehiculo.tipoCuerpo,
         combustibleAC: this.currentVehiculo.combustibleAC,
+        patente: this.currentVehiculo.patente,
+        url: this.currentVehiculo.url,
         disponibilidad: [
             "2024-12-24",
             "2024-12-28",
@@ -698,7 +706,7 @@ export default {
       // Intentamos hacer la solicitud PUT para actualizar el vehículo
       try {
         const response = await axios.put(
-          `${import.meta.env.VITE_BASE_URL}vehiculos/${this.currentVehiculo.id_vehiculo}?permiso=administrador`,
+          `${import.meta.env.VITE_BASE_URL}vehiculos/${this.currentVehiculo.idVehiculo}?permiso=administrador`,
           vehiculoToUpdate
         );
         console.log('Vehículo actualizado:', response.data);
