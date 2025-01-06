@@ -91,7 +91,7 @@
             <input 
             type="text" 
             v-model="searchQuery" 
-            placeholder="Buscar por fecha o ID..." 
+            placeholder="Buscar por ID..." 
             class="search-bar"
           />
           <button class="search-button" @click="filtrarInformes">🔍</button>

@@ -184,6 +184,14 @@
             <label for="combustible">Combustible</label>
             <input type="text" id="combustible" v-model="newVehiculo.combustibleAC" required />
           </div>
+          <div>
+            <label for="patente">Patente:</label>
+            <input type="text" id="patente" v-model="newVehiculo.patente" required />
+          </div>
+          <div>
+            <label for="ruta">Ruta Imagen:</label>
+            <input type="text" id="ruta" v-model="newVehiculo.rutaImagen" required />
+          </div>
           <div class="form-group">
             <label for="disponibilidad">Disponible para arrendar</label>
             <input type="checkbox" id="disponibilidad" v-model="newVehiculo.disponible_uso" />
@@ -236,8 +244,11 @@
             <label for="combustible">Combustible:</label>
             <input type="text" id="combustible" v-model="currentVehiculo.combustibleAC" required />
 
-            <label for="patente">patente:</label>
+            <label for="patente">Patente:</label>
             <input type="text" id="patente" v-model="currentVehiculo.patente" required />
+
+            <label for="ruta">Ruta Imagen:</label>
+            <input type="text" id="ruta" v-model="currentVehiculo.rutaImagen" required />
 
             <label for="disponibilidad">Disponible para arrendar:</label>
             <input type="checkbox" id="disponibilidad" v-model="currentVehiculo.disponible_uso" />
@@ -385,6 +396,8 @@ export default {
         categoria: '',
         tipoDeCuerpo: '',
         combustibleAC: '',
+        patente: '',
+        rutaImagen: '',
         disponibilidad: [
             "2024-12-24",
             "2024-12-28",
@@ -411,7 +424,7 @@ export default {
           tipo_cuerpo: '',
           combustibleAC: '',
           patente: '',
-          url: '',
+          rutaImagen: '',
           disponible_uso: false
         },
 
@@ -612,7 +625,9 @@ export default {
         anio: this.newVehiculo.anio,
         tipoTransmision: this.newVehiculo.tipoDeTransmision,
         categoria: this.newVehiculo.categoria,
-        tipo_cuerpo: this.newVehiculo.tipoDeCuerpo,
+        tipoCuerpo: this.newVehiculo.tipoDeCuerpo,
+        patente: this.newVehiculo.patente,
+        rutaImagen: this.newVehiculo.rutaImagen,
         combustibleAC: this.newVehiculo.combustibleAC,
         disponibilidad: [
             "2024-12-24",
@@ -634,6 +649,7 @@ export default {
             tipoDeTransmision: '',
             categoria: '',
             tipoDeCuerpo: '',
+            rutaImagen: '',
             combustibleAC: '',
             patente: '',
             disponible_uso: false
@@ -693,7 +709,7 @@ export default {
         tipoCuerpo: this.currentVehiculo.tipoCuerpo,
         combustibleAC: this.currentVehiculo.combustibleAC,
         patente: this.currentVehiculo.patente,
-        url: this.currentVehiculo.url,
+        rutaImagen: this.currentVehiculo.rutaImagen,
         disponibilidad: [
             "2024-12-24",
             "2024-12-28",
