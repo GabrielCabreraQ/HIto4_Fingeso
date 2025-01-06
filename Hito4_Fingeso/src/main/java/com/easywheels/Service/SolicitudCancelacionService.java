@@ -22,7 +22,7 @@ public class SolicitudCancelacionService {
         return repository.findAll();
     }
 
-    public SolicitudCancelacion actualizarSolicitud(Integer id, SolicitudCancelacion nuevaSolicitud) {
+    public SolicitudCancelacion actualizarSolicitud(long id, SolicitudCancelacion nuevaSolicitud) {
         return repository.findById(id).map(solicitud -> {
             solicitud.setDescripcion(nuevaSolicitud.getDescripcion());
             solicitud.setCancelacionRealizada(nuevaSolicitud.getCancelacionRealizada());
@@ -30,7 +30,26 @@ public class SolicitudCancelacionService {
         }).orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
     }
 
-    public void eliminarSolicitud(Integer id) {
+    public SolicitudCancelacion actualizarCancelacionRealizada(long id, SolicitudCancelacion nuevaSolicitud) {
+        // Buscar la solicitud existente por ID
+        return repository.findById(id).map(solicitud -> {
+            // Establecer la cancelación como realizada
+            solicitud.setCancelacionRealizada(true);
+            // Actualizar los demás campos si es necesario
+            if (nuevaSolicitud.getDescripcion() != null) {
+                solicitud.setDescripcion(nuevaSolicitud.getDescripcion());
+            }
+            // Guardar la solicitud actualizada
+            return repository.save(solicitud);
+        }).orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
+    }
+
+    public void eliminarSolicitud(long id) {
         repository.deleteById(id);
+    }
+
+    // Método para buscar la solicitud por el ID del arriendo
+    public SolicitudCancelacion buscarSolicitudPorArriendo(int idArriendo) {
+        return repository.findByIdArriendo(idArriendo);  // Asumiendo que el repositorio tiene este método implementado
     }
 }

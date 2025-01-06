@@ -160,6 +160,7 @@ public class ArrendatarioService {
                     arriendoDetails.put("fechaInicio", arriendo.getFechaInicio());
                     arriendoDetails.put("fechaFin", arriendo.getFechaFin());
                     arriendoDetails.put("precio", arriendo.getPrecio());
+                    arriendoDetails.put("arriendo_cancelado", arriendo.getArriendo_cancelado());
                     return arriendoDetails;
                 })
                 .collect(Collectors.toList());

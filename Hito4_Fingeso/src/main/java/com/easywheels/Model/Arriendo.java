@@ -24,13 +24,14 @@ public class Arriendo {
     private LocalDate fechaFin;    // Cambiado a LocalDate
     private Boolean conformidad;
     private Boolean cancelado;
+    private Boolean arriendo_cancelado = false;
     @Transient
     private Boleta boleta = new Boleta();
 
     // Constructor sin Boleta
     public Arriendo(Vehiculo vehiculo, Arrendatario arrendatario,
                     int precio, LocalDate fechaInicio, LocalDate fechaFin,
-                    Boolean conformidad, Boolean cancelado) {
+                    Boolean conformidad, Boolean cancelado, Boolean arriendo_cancelado) {
         this.vehiculo = vehiculo;
         this.arrendatario = arrendatario;
         this.precio = precio;
@@ -38,12 +39,13 @@ public class Arriendo {
         this.fechaFin = fechaFin;
         this.conformidad = conformidad;
         this.cancelado = cancelado;
+        this.arriendo_cancelado = arriendo_cancelado;
     }
 
     public Arriendo() {
     }
 
-    public Arriendo(int id, Arrendatario arrendatario, Vehiculo vehiculo, int precio, LocalDate fechaInicio, LocalDate fechaFin, Boolean conformidad, Boolean cancelado, Boleta boleta) {
+    public Arriendo(int id, Arrendatario arrendatario, Vehiculo vehiculo, int precio, LocalDate fechaInicio, LocalDate fechaFin, Boolean conformidad, Boolean cancelado, Boleta boleta, Boolean arriendo_cancelado) {
         this.id = id;
         this.arrendatario = arrendatario;
         this.vehiculo = vehiculo;
@@ -53,6 +55,7 @@ public class Arriendo {
         this.conformidad = conformidad;
         this.cancelado = cancelado;
         this.boleta = boleta;
+        this.arriendo_cancelado = arriendo_cancelado;
     }
 
     public int getId() {
@@ -126,4 +129,14 @@ public class Arriendo {
     public void setBoleta(Boleta boleta) {
         this.boleta = boleta;
     }
+
+    public void setArriendo_cancelado( Boolean arriendoCancelado){
+        this.arriendo_cancelado = arriendoCancelado;
+    }
+
+    public Boolean getArriendo_cancelado() {
+        return arriendo_cancelado;
+    }
 }
+
+

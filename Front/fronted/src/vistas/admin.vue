@@ -115,27 +115,35 @@
         </div>
       </div>
 
-      <!-- Sección para Solicitudes de Cancelación -->
-      <div v-if="selectedSection === 'Solicitudes de Cancelación'">
-        <h2>Solicitudes de Cancelación</h2>
-        <!-- Tabla de solicitudes de cancelación -->
-        <table class="publication-table">
-          <thead>
-            <tr>
-              <th>ID Arriendo</th>
-              <th>Descripción</th>
-              <th>Estado de Cancelación</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(solicitud, index) in solicitudesCancelacion" :key="solicitud.id">
-              <td>{{ solicitud.idArriendo }}</td>
-              <td>{{ solicitud.descripcion }}</td>
-              <td>{{ solicitud.cancelacionRealizada ? 'Realizada' : 'Pendiente' }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+<!-- Sección para Solicitudes de Cancelación -->
+<div v-if="selectedSection === 'Solicitudes de Cancelación'">
+  <h2>Solicitudes de Cancelación</h2>
+  <!-- Tabla de solicitudes de cancelación con barra de desplazamiento -->
+  <div class="table-container">
+    <table class="publication-table">
+      <thead>
+        <tr>
+          <th>ID Arriendo</th>
+          <th>Descripción</th>
+          <th>Estado de Cancelación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(solicitud, index) in solicitudesCancelacion" :key="solicitud.id">
+          <td>{{ solicitud.idArriendo }}</td>
+          <td>{{ solicitud.descripcion }}</td>
+          <td>{{ solicitud.cancelacionRealizada ? 'Realizada' : 'Pendiente' }}</td>
+          <td>
+            <button @click="cancelarSolicitud(solicitud.idArriendo)" :disabled="solicitud.cancelacionRealizada">
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
 
 
       <!-- Gestión de Vehículos -->
@@ -370,7 +378,7 @@ export default {
         },
 
         vehiculos: [], // Lista de vehículos
-        selectedSection: null,
+        selectedSection: "Gestión de Publicaciones",
         solicitudesCancelacion: [],
         publications: [], // Lista de publicaciones
         isEditing: false, // Controla si el formulario de edición está visible
@@ -551,6 +559,29 @@ export default {
       console.error('Error al obtener las solicitudes de cancelación:', error);
     }
   },
+
+
+  async cancelarSolicitud(idArriendo) {
+  try {
+    const response = await axios.put(`http://localhost:8080/arriendos/cancelar/${idArriendo}`);
+
+    if (response.status === 200) {
+      // Actualizar localmente el estado de cancelación
+      const solicitud = this.solicitudesCancelacion.find(
+        (solicitud) => solicitud.idArriendo === idArriendo
+      );
+      if (solicitud) {
+        solicitud.cancelacionRealizada = true;
+      }
+      alert("Estado de cancelación actualizado exitosamente.");
+    } else {
+      alert("Error al actualizar el estado de cancelación.");
+    }
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    alert("No se pudo conectar al servidor.");
+  }
+},
 
   changeSection(section) {
     this.selectedSection = section;

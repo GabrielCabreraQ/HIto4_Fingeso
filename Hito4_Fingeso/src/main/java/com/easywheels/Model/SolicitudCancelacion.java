@@ -10,6 +10,7 @@ import lombok.Setter;
 @DiscriminatorValue("solicitud")
 public class SolicitudCancelacion {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;  // El ID se generará automáticamente
@@ -52,4 +53,8 @@ public class SolicitudCancelacion {
     public void setCancelacionRealizada(Boolean cancelacionRealizada) {
         this.cancelacionRealizada = cancelacionRealizada;
     }
+    public long getId() {
+        return id;
+    }
+
 }

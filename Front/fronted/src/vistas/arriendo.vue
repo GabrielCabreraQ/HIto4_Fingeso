@@ -337,6 +337,8 @@ const descripcion = ref(''); // Nueva variable reactiva para la descripción
               <p>Tipo de transmisión: {{ vehiculoArrendado.vehiculo.tipoTransmision }}</p>
               <p>Precio: {{ vehiculoArrendado.precio }}</p>
               <p>Patente: {{ vehiculoArrendado.vehiculo.patente }}</p>
+              <p>Activo: {{ vehiculoArrendado.arriendo_cancelado ? "No" : "Si" }}</p>
+
               <img :src="vehiculoArrendado.vehiculo.rutaImagen" class="imagenVehiculo"/> <br>
               <button class="botones-arrendar" @click="cancelar(vehiculoArrendado.idArriendo)">Cancelar Arriendo</button>
             </div>
