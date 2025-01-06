@@ -37,7 +37,7 @@
                   <tr>
                     <th>Vehículo ID</th>
                     <th>Modelo</th>
-                    <th>Crear</th>
+                    <th>Crear informe</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -87,14 +87,22 @@
         
         <!-- Buscar Informes -->
         <div v-if="selectedSection === 'Buscar Informes'">
-          <h2>Buscar Informes</h2>
+          <h2>Buscar Informes
+            <input 
+            type="text" 
+            v-model="searchQuery" 
+            placeholder="Buscar por fecha o ID..." 
+            class="search-bar"
+          />
+          <button class="search-button" @click="filtrarInformes">🔍</button>
+          </h2>
           <div class="scrollable-table-container">
             <div v-if="!showform2">
               <!-- Tabla de publicaciones -->
               <table class="informe-table">
                 <thead>
                   <tr>
-                    <th>Vehículo ID</th>
+                    <th> </th>
                     <th>Fecha</th>
                     <th>Visualizar</th>
                   </tr>
@@ -117,10 +125,6 @@
                 <div>
                   <label for="idinforme">ID Informe:</label>
                   <input id="idinforme" v-model="currentinforme.id" readonly />
-                </div>
-                <div>
-                  <label for="idVehiculo">ID Vehículo:</label>
-                  <input id="idVehiculo" v-model="currentinforme.id_vehiculo" readonly />
                 </div>
                 <div>
                   <label for="fechaGen">Fecha de generación:</label>
@@ -293,6 +297,24 @@
           console.error("Error al obtener los informes:", error);
           alert("No se pudo obtener la lista de informes. Verifica tu conexión.");
         }
+      },
+
+      async filtrarInformes() {
+          try {
+              const response = await axios.get(
+                  `${import.meta.env.VITE_BASE_URL}vehiculos/${this.searchQuery}/informe`,
+                  {
+                      params: {
+                          permiso: 'administrador'
+                      }
+                  }
+              );
+              console.log("Informes filtrados obtenidos:", response.data);
+              this.informes = response.data;
+          } catch (error) {
+              console.error("Error al obtener los informes filtrados:", error);
+              alert("No se pudo obtener la lista de informes filtrados. Verifica tu conexión.");
+          }
       },
     },
     created() {
