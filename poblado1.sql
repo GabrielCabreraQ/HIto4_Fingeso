@@ -4,12 +4,13 @@ insert into usuario (rut_usuario,nombre_usuario,correo_usuario,contrasenia_usuar
 values
 	('212787372','Isaac Espinoza','piscolix@gmail.com','cc34','975956424','1991-04-09','administrador','Valdivia'),
 	('223899831','Francisco Riquelme','francisco.riquelme@usach.cl','1234','972253424','2000-04-03','administrador','Santiago'),
+	('205060154','Jaime Rojas','jaime.r@usach.cl','1234','912345678','2000-04-08','mecanico','Santiago'),
 	('188829872','Cristobal Briceño','cristobal@gmail.com','1234','975556424','1996-09-19','arrendatario',null),
 	('199090234','Rodrigo Vasquez','altoyoyo@gmail.com','1234','956956424','1990-09-19','arrendatario',null),
 	('200980982','Esteban Paredes','esteban@gmail.com','1234','975955224','2002-02-23','arrendatario',null),
 	('167897281','Juan Manuel','juan@gmail.com','1234','975956477','1900-05-20','administrador','Santiago'),
 	('228398231','Sebastian Del Solar','sebastian.delsolar@usach.cl','1234','947563381','1988-04-28','administrador','Santiago'),
-    ('199872823','Camila Vallejos','cami.va@gob.cl','1234','947563381','1988-04-28','administrador','Santiago');
+   	('199872823','Camila Vallejos','cami.va@gob.cl','1234','947563381','1988-04-28','administrador','Santiago');
 
 -- insert into arrendatario_documentos (arrendatario_id_usuario,documentos)
 -- values (3,'Cedulo Identidad');
